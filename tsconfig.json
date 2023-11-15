@@ -21,6 +21,6 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.svg", "custom.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.svg", "custom.d.ts", "src/assets/svg/svg.d.ts"],
   "exclude": ["node_modules"]
 }
