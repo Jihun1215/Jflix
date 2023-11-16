@@ -1,19 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import HeaderLogo from 'assets/svg/netflix.svg?react';
 import { motion, useScroll, useAnimation } from 'framer-motion';
 
-import { FiSearch } from 'react-icons/fi';
+import { Headernav } from './Header/Headernav';
+import { Headersearch } from './Header/Headersearch';
 // import { motion, useScroll, useAnimation, AnimatePresence } from 'framer-motion';
 
 export const Header = () => {
-  const [isInput, setIsInput] = useState(false);
-
-  const onClickSearcIcon = () => {
-    setIsInput(!isInput);
-  };
-
   // Nav scroll animation
   const { scrollY } = useScroll();
   const headerAnimation = useAnimation();
@@ -40,17 +35,9 @@ export const Header = () => {
           />
         </MainLogo>
 
-        <Nav>
-          <li>영화</li>
-          <li>TV</li>
-          <li>보관함</li>
-          <li>한국어</li>
-        </Nav>
+        <Headernav />
       </Col>
-      <SearchArea>
-        <SearchInput isinput={isInput.toString()} value="text" placeholder="검색어를 입력해주세요" />
-        <SearcIcon isinput={isInput.toString()} onClick={onClickSearcIcon} />
-      </SearchArea>
+      <Headersearch />
     </Container>
   );
 };
@@ -118,41 +105,4 @@ const headerVariants = {
     backgroundColor: 'rgba(0, 0, 0, 1)',
   },
 };
-
-const Nav = styled.ul`
-  width: 400px;
-  height: 100%;
-  ${({ theme }) => theme.FlexRow};
-  gap: 0 20px;
-  align-items: center;
-  list-style: none;
-`;
-
-// const L= styled.``
-
-const SearchArea = styled.form`
-  position: relative;
-  width: 200px;
-  ${({ theme }) => theme.BoxCenter};
-  z-index: 10000;
-`;
-
-const SearchInput = styled.input<{ isinput: string }>`
-  width: 180px;
-  height: 100%;
-  background-color: gray;
-  padding-left: 30px;
-  transition: 0.3s;
-  opacity: ${(props) => (props.isinput === 'true' ? '1' : '0')};
-`;
-
-const SearcIcon = styled(FiSearch)<{ isinput: string }>`
-  position: absolute;
-  left: ${(props) => (props.isinput === 'true' ? '15px' : '175px')};
-  cursor: pointer;
-  font-size: 20px;
-  color: white;
-  /* border: 1px solid red; */
-  z-index: 100;
-  transition: 0.3s;
-`;
+export { Headersearch };

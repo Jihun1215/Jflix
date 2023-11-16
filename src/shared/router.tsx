@@ -4,7 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { App } from '../App';
 import { Layout } from 'shared/Layout';
-import { Home, NotFound, Detail } from 'pages';
+import { Home, Movie, Tv, MyList, Detail, NotFound } from 'pages';
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +19,18 @@ export const router = createBrowserRouter([
       {
         element: <Layout />,
         children: [{ path: '/', element: <Home /> }],
+      },
+      {
+        element: <Layout />,
+        children: [{ path: '/movie', element: <Movie /> }],
+      },
+      {
+        element: <Layout />,
+        children: [{ path: '/tv', element: <Tv /> }],
+      },
+      {
+        element: <Layout />,
+        children: [{ path: '/myList', element: <MyList /> }],
       },
       {
         element: <Layout />,
