@@ -1,25 +1,18 @@
-// import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useMatch, PathMatch } from 'react-router-dom';
 import {
   motion,
-  // useScroll,
   // useAnimation,
   AnimatePresence,
 } from 'framer-motion';
 
 export const Headernav = () => {
   const navigate = useNavigate();
-  // Menu indicator animation
+
   const homeMatch: PathMatch<string> | null = useMatch('/');
   const movieMatch: PathMatch<string> | null = useMatch('/movie');
   const tvMatch: PathMatch<string> | null = useMatch('/tv');
   const mylistMatch: PathMatch<string> | null = useMatch('/mylist');
-
-  console.log(homeMatch);
-  console.log(movieMatch);
-  console.log(tvMatch);
-  console.log(mylistMatch);
 
   return (
     <Nav>

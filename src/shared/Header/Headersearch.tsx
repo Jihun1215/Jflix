@@ -71,8 +71,7 @@ const SearcIcon = styled(FiSearch)<{ isinput: string }>`
   left: ${(props) => (props.isinput === 'true' ? '15px' : '175px')};
   cursor: pointer;
   font-size: 20px;
-  color: white;
-  /* border: 1px solid red; */
+  color: ${({ theme }) => theme.colors.white};
   z-index: 100;
   transition: 0.3s;
 `;
