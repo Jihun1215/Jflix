@@ -77,5 +77,5 @@ export const Theme: DefaultTheme = {
   bgColor: '#f1f3f5',
   bgColor2: '#dee2e6',
   color: '#191A23',
-  color2: '#E2E2E2',
+  color2: '#E5E5E5',
 };

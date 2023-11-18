@@ -13,9 +13,7 @@ export const Layout = () => {
 };
 const LayoutContiner = styled.div`
   width: 100vw;
-  height: 200vh;
-  ${({ theme }) => theme.FlexCol};
-  ${({ theme }) => theme.FlexCenter};
+  /* background-color: black; */
   background-color: #e3e5eb;
   color: ${({ theme }) => theme.color};
 `;

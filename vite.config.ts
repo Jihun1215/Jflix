@@ -9,13 +9,14 @@ export default defineConfig({
     alias: [
       { find: 'src', replacement: '/src' },
       { find: 'assets', replacement: '/src/assets' },
-      // { find: "components", replacement: "/src/components" },
+      { find: 'components', replacement: '/src/components' },
       { find: 'pages', replacement: '/src/pages' },
       { find: 'styles', replacement: '/src/styles' },
       { find: 'shared', replacement: '/src/shared' },
       // { find: "element", replacement: "/src/element" },
       { find: 'state', replacement: '/src/state' },
-      // { find: "hooks", replacement: "/src/hooks" },
+      { find: 'type', replacement: '/src/type' },
+      { find: 'utils', replacement: '/src/utils' },
     ],
   },
 });

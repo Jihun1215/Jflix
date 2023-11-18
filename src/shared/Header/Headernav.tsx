@@ -58,6 +58,7 @@ const Nav = styled.ul`
   gap: 0 20px;
   align-items: center;
   list-style: none;
+  color: gray;
 `;
 
 const Li = styled.li`
