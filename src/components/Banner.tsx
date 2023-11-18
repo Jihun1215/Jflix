@@ -19,14 +19,14 @@ import { FiInfo } from 'react-icons/fi';
 
 export const Banner = ({ type, content, ranking }: BannerProps) => {
   console.log(content);
-
   if (content === undefined) {
     return <div> 로딩 중 </div>;
   }
 
   const BackGroundImg = getImgSetting(content?.backdrop_path);
   const BackGroundposter = getImgSetting(content?.poster_path);
-  console.log(content?.release_date);
+
+  const truncatedText = content?.overview.length > 150 ? `${content?.overview.slice(0, 250)}...` : content?.overview;
   return (
     <>
       {content && (
@@ -36,12 +36,14 @@ export const Banner = ({ type, content, ranking }: BannerProps) => {
               <NetflixLogo />
               {type === 'movie' ? <p>오늘의 {ranking + 1}위 영화</p> : <p>오늘의 {ranking + 1}위 Tv</p>}
             </TopText>
-            <Title>{content?.title}</Title>
+            <Title>
+              {type === 'movie' ? `${content?.title}` : `${content?.name}`}
+            </Title>
             <GradeAndDate>
               <span>평점: {content?.vote_average}</span>
-              <span>개봉일: {content?.release_date}</span>
+              <span>{type === 'movie' ? `개봉일: ${content?.release_date}` : `첫 개봉 ${content?.first_air_date}`}</span>
             </GradeAndDate>
-            <Overview>{content?.overview}</Overview>
+            <Overview>{truncatedText}</Overview>
             <DetailArea>
               <button>
                 <FiInfo />

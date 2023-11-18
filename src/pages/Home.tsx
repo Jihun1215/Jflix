@@ -1,15 +1,21 @@
 import styled from 'styled-components';
-import {
-  // getnowPlayMovieData,
-  getMovieData,
-} from 'utils/api';
+import { getnowPlayMovieData, getMovieData, getTopRatedMovies, getUpcomingMovies } from 'utils/api';
 import { useQuery } from 'react-query';
 
 import { Banner } from 'components/Banner';
 // import { TopMovies } from './Home/TopMovies';
 
 export const Home = () => {
-  const { data, isLoading, isError } = useQuery('getMovieData', getMovieData);
+  const { data: popularMovieList, isLoading: loadingMovie, isError } = useQuery('getMovieData', getMovieData);
+  const { data: nowPlauyMovieList, isLoading: loadingNowMovie } = useQuery('getMovieData', getnowPlayMovieData);
+  const { data: topRatedMovieList, isLoading: loadingTopratedMovie } = useQuery('getTopRatedMovies', getTopRatedMovies);
+  const { data: upcomingMovieList, isLoading: loadingupcomingMovie } = useQuery('getUpcomingMovies', getUpcomingMovies);
+
+  console.log('현재상영중', nowPlauyMovieList);
+  console.log('최고평점',topRatedMovieList);
+  console.log('공개예정',upcomingMovieList);
+
+  const isLoading = loadingNowMovie || loadingMovie || loadingTopratedMovie || loadingupcomingMovie;
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -23,7 +29,7 @@ export const Home = () => {
 
   return (
     <Container>
-      <Banner type="movie" content={data?.results?.[randomNumber]} ranking={randomNumber} />
+      <Banner type="movie" content={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
       {/* <TopMovies /> */}
     </Container>
   );
