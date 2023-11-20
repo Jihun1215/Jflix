@@ -7,7 +7,7 @@ const TvURL = 'https://api.themoviedb.org/3/tv';
 const language = 'ko-KR';
 
 // 이미지를 가져올떄 사용하는 함수
-export const getImgSetting = (url?: string) => {
+export const getImgPath = (url?: string) => {
   return `https://image.tmdb.org/t/p/original/${url}`;
 };
 

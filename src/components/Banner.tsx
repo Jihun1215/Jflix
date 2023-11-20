@@ -16,7 +16,7 @@ interface BannerProps {
   ranking: number;
 }
 
-import { getImgSetting } from 'utils/api';
+import { getImgPath } from 'utils/api';
 
 import Logo from 'assets/svg/netflixlogo.svg?react';
 import { FiInfo } from 'react-icons/fi';
@@ -25,11 +25,11 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
   const [, setIsmodalOpen] = useRecoilState(modalIsOpenState);
 
   if (contents === undefined) {
-    return <div> 로딩 중 </div>;
+    return <div>로딩 중 </div>;
   }
 
-  const BackGroundImg = getImgSetting(contents?.backdrop_path);
-  const BackGroundposter = getImgSetting(contents?.poster_path);
+  const BackGroundImg = getImgPath(contents?.backdrop_path);
+  const BackGroundposter = getImgPath(contents?.poster_path);
 
   const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 250)}...` : contents?.overview;
 
