@@ -17,7 +17,7 @@ export const getMovieData = async () => {
   const params = {
     api_key: ApiKey,
     language: language,
-    page: 2,
+    // page: 2,
   };
 
   const response = await axios.get(url, { params });

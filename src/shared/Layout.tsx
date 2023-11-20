@@ -1,9 +1,14 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { modalIsOpenState } from 'state/atoms';
+
 
 import { Header } from './Header';
 
 export const Layout = () => {
+  const [isModalOpen] = useRecoilState(modalIsOpenState);
+  console.log(isModalOpen);
   return (
     <LayoutContiner>
       <Header />

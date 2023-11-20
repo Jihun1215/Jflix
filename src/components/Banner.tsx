@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { modalIsOpenState } from 'state/atoms';
 
 import {
   IContent,
@@ -6,9 +8,11 @@ import {
   //   ITodayMoive,
 } from 'type/type';
 
+import { Modal } from './Modal';
+
 interface BannerProps {
   type: string;
-  content?: IContent;
+  contents?: IContent;
   ranking: number;
 }
 
@@ -17,35 +21,44 @@ import { getImgSetting } from 'utils/api';
 import Logo from 'assets/svg/netflixlogo.svg?react';
 import { FiInfo } from 'react-icons/fi';
 
-export const Banner = ({ type, content, ranking }: BannerProps) => {
-  console.log(content);
-  if (content === undefined) {
+export const Banner = ({ type, contents, ranking }: BannerProps) => {
+  const [, setIsmodalOpen] = useRecoilState(modalIsOpenState);
+
+  if (contents === undefined) {
     return <div> 로딩 중 </div>;
   }
 
-  const BackGroundImg = getImgSetting(content?.backdrop_path);
-  const BackGroundposter = getImgSetting(content?.poster_path);
+  const BackGroundImg = getImgSetting(contents?.backdrop_path);
+  const BackGroundposter = getImgSetting(contents?.poster_path);
 
-  const truncatedText = content?.overview.length > 150 ? `${content?.overview.slice(0, 250)}...` : content?.overview;
+  const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 250)}...` : contents?.overview;
+
+  const onClickModalOpen = () => {
+    // console.log(data);
+    setIsmodalOpen(true);
+  };
+
   return (
     <>
-      {content && (
+      {contents && (
         <Container img={BackGroundImg} poster={BackGroundposter}>
           <Card>
             <TopText>
               <NetflixLogo />
               {type === 'movie' ? <p>오늘의 {ranking + 1}위 영화</p> : <p>오늘의 {ranking + 1}위 Tv</p>}
             </TopText>
-            <Title>
-              {type === 'movie' ? `${content?.title}` : `${content?.name}`}
-            </Title>
+            <Title>{type === 'movie' ? `${contents?.title}` : `${contents?.name}`}</Title>
             <GradeAndDate>
-              <span>평점: {content?.vote_average}</span>
-              <span>{type === 'movie' ? `개봉일: ${content?.release_date}` : `첫 개봉 ${content?.first_air_date}`}</span>
+              <span>평점: {contents?.vote_average}</span>
+              <span>{type === 'movie' ? `개봉일: ${contents?.release_date}` : `첫 개봉 ${contents?.first_air_date}`}</span>
             </GradeAndDate>
             <Overview>{truncatedText}</Overview>
             <DetailArea>
-              <button>
+              <button
+                onClick={() => {
+                  onClickModalOpen();
+                }}
+              >
                 <FiInfo />
                 상세 보기
               </button>
@@ -53,6 +66,8 @@ export const Banner = ({ type, content, ranking }: BannerProps) => {
           </Card>
         </Container>
       )}
+
+      <Modal type={type} contents={contents} />
     </>
   );
 };

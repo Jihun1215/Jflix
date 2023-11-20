@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { getnowPlayMovieData, getMovieData, getTopRatedMovies, getUpcomingMovies } from 'utils/api';
 import { useQuery } from 'react-query';
 
-import { Banner } from 'components/Banner';
-// import { TopMovies } from './Home/TopMovies';
+import { Banner, Slider } from 'components';
 
 export const Home = () => {
   const { data: popularMovieList, isLoading: loadingMovie, isError } = useQuery('getMovieData', getMovieData);
@@ -11,9 +10,6 @@ export const Home = () => {
   const { data: topRatedMovieList, isLoading: loadingTopratedMovie } = useQuery('getTopRatedMovies', getTopRatedMovies);
   const { data: upcomingMovieList, isLoading: loadingupcomingMovie } = useQuery('getUpcomingMovies', getUpcomingMovies);
 
-  console.log('현재상영중', nowPlauyMovieList);
-  console.log('최고평점',topRatedMovieList);
-  console.log('공개예정',upcomingMovieList);
 
   const isLoading = loadingNowMovie || loadingMovie || loadingTopratedMovie || loadingupcomingMovie;
 
@@ -29,8 +25,11 @@ export const Home = () => {
 
   return (
     <Container>
-      <Banner type="movie" content={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
-      {/* <TopMovies /> */}
+      <Banner type="movie" contents={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
+      <Slider type="movie" video={nowPlauyMovieList?.results} title="인기 영화" />
+      <Slider type="movie" video={topRatedMovieList?.results} title="최고평점 영화" />
+      <Slider type="movie" video={upcomingMovieList?.results} title="개봉예정 영화" />
+
     </Container>
   );
 };
@@ -38,5 +37,6 @@ export const Home = () => {
 const Container = styled.div`
   width: 100vw;
   height: 200vh;
-  border: 1px solid red;
+  ${({ theme }) => theme.FlexCol};
+  gap: 50px 0;
 `;

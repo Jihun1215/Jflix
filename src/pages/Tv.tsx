@@ -11,8 +11,9 @@ export const Tv = () => {
 
   const isLoading = loadingTopRated || loadingUpDate || loadingAiringToday;
 
-  console.log('업데이트 예정 TV', upDateTvList);
-  console.log('오늘 방영 TV', airingTodayTvList);
+  // console.log('최고평점 TV', topRatedTvList);
+  // console.log('업데이트 예정 TV', upDateTvList);
+  // console.log('오늘 방영 TV', airingTodayTvList);
 
   if (isLoading) {
     return <div>1isLoading</div>;
