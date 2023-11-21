@@ -1,12 +1,13 @@
-// import { useState } from 'react';
-import styled from 'styled-components';
-// import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import styled, { css } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-// import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { useDebouncedResize } from 'hooks/useDebouncedResize';
 
 import { GrPrevious, GrNext } from 'react-icons/gr';
-
-// import { getImgSetting } from 'utils/api';
+import { getImgPath } from 'utils/api';
 
 import {
   IContent,
@@ -14,44 +15,168 @@ import {
   //   ITodayMoive,
 } from 'type/type';
 
-interface SliderProps {
-  type: string;
-  video?: IContent;
-  title: string;
+interface ISliderVariantsProps {
+  movingBack: boolean;
+  windowWidth: number;
 }
 
-export const Slider = ({ type, video, title }: SliderProps) => {
+interface SliderProps {
+  type: string;
+  contents?: IContent[];
+  title: string;
+}
+//  Card 컴포넌트 애니메이션
+const cardVariants = {
+  hover: {
+    scale: 1.3,
+    transition: {
+      delay: 0.5,
+      duaration: 0.3,
+      type: 'tween',
+    },
+  },
+};
+
+// 슬라이더 영화 이미지 Hover시 보여지는 함수 코드
+const infoVariants = {
+  hover: {
+    display: 'block',
+    transition: {
+      delay: 0.5,
+      duaration: 0.3,
+      type: 'tween',
+    },
+  },
+};
+
+export const Slider = ({ type, contents, title }: SliderProps) => {
+  // Slider layout
+  const windowWidth = useDebouncedResize();
+
+  const getSliderOffSet = (windowWidth: number) => {
+    if (windowWidth <= 430) return 2;
+    else if (windowWidth <= 768) return 3;
+    else if (windowWidth <= 992) return 4;
+    else if (windowWidth <= 1600) return 6;
+    else return 6;
+  };
+
+  // Slider List
+  // view에 보이는 슬라이더 영화이미지 갯수
+  const offset = getSliderOffSet(windowWidth);
+
+  // 슬라이더 버튼을 누룬 숫자
+  const [index, setIndex] = useState(0);
+
+  // props 받은 배열의 길이
+  const listLength = contents?.length;
+
+  // 최대 Index 길이
+  const maxIndex = Math.floor(listLength / offset) - 1;
+
+  // console.log('offset', offset, type);
+  // console.log('index', index);
+  // console.log('MaxIndex', maxIndex);
+  // Slider Moving
+  const [isPrevBtnDisabled, setIsPrevBtnDisabled] = useState(true);
+  const [moving, setMoving] = useState(false);
+  const [movingBack, setMovingBack] = useState(false);
+  // console.log('offset', offset);
+  // console.log('index', index);
+  // console.log('MaxIndex', maxIndex);
+
+  const onClickPrenBtn = () => {
+    if (contents) {
+      if (moving) return;
+      setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+      setMoving(true);
+      setMovingBack(true);
+    }
+  };
+
+  const onClickNextBtn = () => {
+    if (contents) {
+      // console.log('increase 문 진입');
+      if (moving) return;
+      // console.log('increase 누름');
+      setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+      setMoving(true);
+      setIsPrevBtnDisabled(false);
+    }
+  };
+
+  const toggleMoving = () => {
+    setMoving(false);
+    setMovingBack(false);
+  };
+
+  const navigate = useNavigate();
+  const onBoxClick = (id: number) => {
+    navigate(`?id=${id}`);
+  };
 
   return (
     <Container>
       <TitleAndPoint>
         <Title>{title}</Title>
-        <div>1</div>
       </TitleAndPoint>
       <SliderContainer>
-        {video?.map((v) => {
-          return (
-            <Card
-              key={v.id}
-            
-            >
-              <ListImg src={`https://image.tmdb.org/t/p/original/${v?.poster_path}`} />
-            </Card>
-          );
-        })}
-        <PrevBtn />
-        <NextBtn />
+        <PrevBtn onClick={onClickPrenBtn} disabled={isPrevBtnDisabled}>
+          <GrPrevious />
+        </PrevBtn>
+
+        <AnimatePresence initial={false} onExitComplete={toggleMoving} custom={{ movingBack, windowWidth }}>
+          <SliderWrapper
+            key={index}
+            variants={sliderVariants}
+            initial="enter"
+            animate="show"
+            exit="exit"
+            transition={{ type: 'tween', duration: 0.5 }}
+            custom={{ movingBack, windowWidth }}
+            offset={offset}
+          >
+            {contents?.slice(offset * index, offset * index + offset).map((data, idx) => (
+              <Card key={data.id}>
+                <CardThumbnail
+                  bg={getImgPath(data.backdrop_path)}
+                  idx={idx}
+                  offset={offset}
+                  onClick={() => onBoxClick(data.id)}
+                  variants={cardVariants}
+                  whileHover="hover"
+                >
+                  {/* 여기가 Hover시 보이는 영역  */}
+                  <CardInfo variants={infoVariants}>
+                    <CardTitle>{data.title || data.name}</CardTitle>
+                    <CardDateAndRating>
+                      <CardDate>
+                        개봉일: <span>{data.release_date}</span>
+                      </CardDate>
+                      <CardRating>
+                        평점: <span> {data.vote_average}</span>
+                      </CardRating>
+                    </CardDateAndRating>
+                  </CardInfo>
+                </CardThumbnail>
+              </Card>
+            ))}
+          </SliderWrapper>
+          <NextBtn onClick={onClickNextBtn}>
+            <GrNext />
+          </NextBtn>
+        </AnimatePresence>
       </SliderContainer>
     </Container>
   );
 };
 
 const Container = styled.section`
-  position: relative;
   width: 100%;
-  height: 150px;
-  border: 1px solid red;
+  height: 200px;
   ${({ theme }) => theme.FlexCol};
+  ${({ theme }) => theme.FlexCenter};
+  gap: 20px 0;
 `;
 
 const TitleAndPoint = styled.div`
@@ -59,58 +184,138 @@ const TitleAndPoint = styled.div`
   height: 30px;
   padding: 0 20px;
   ${({ theme }) => theme.FlexRow};
-  justify-content: space-between;
+  align-items: center;
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
+  font-size: 24px;
   ${({ theme }) => theme.BoxCenter};
+  font-weight: 700;
 `;
 
 const SliderContainer = styled.div`
+  position: relative;
   width: 95%;
   height: 120px;
   margin: 0 auto;
   ${({ theme }) => theme.FlexRow};
-  /* display: grid; */
-  /* grid-template-columns: repeat(6, 1fr); */
   align-items: center;
-  gap: 0 15px;
-  /* overflow-x: scroll; */
 `;
 
-const Card = styled.div`
-  min-width: 200px;
-  height: 100px;
-  border: 1px solid red;
-  border-radius: 4px;
+const Button = styled.button`
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  font-size: 20px;
+  z-index: 5;
+
+  ${(props) =>
+    !props.disabled &&
+    css`
+      opacity: 0.5;
+      &:hover {
+        cursor: pointer;
+        opacity: 1;
+      }
+    `}
 `;
 
-const ListImg = styled.img`
-  ${({ theme }) => theme.WH100};
-  background-size: cover;
+const PrevBtn = styled(Button)`
+  left: -10px;
+`;
+const NextBtn = styled(Button)`
+  right: -10px;
+`;
+
+const SliderWrapper = styled(motion.div)<{ offset: number }>`
+  position: absolute;
+  display: grid;
+  grid-template-columns: ${(props) => `repeat(${props.offset}, 1fr)`};
+  gap: 10px;
+  width: 100%;
+  padding: 0 60px;
+  @media (max-width: 1023px) {
+    padding: 0 40px;
+  }
+
+  @media (max-width: 479px) {
+    padding: 0 20px;
+  }
+`;
+
+const sliderVariants = {
+  enter: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
+    x: movingBack ? -windowWidth + 10 : windowWidth - 10,
+  }),
+  show: {
+    x: 0,
+  },
+  exit: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
+    x: movingBack ? windowWidth - 10 : -windowWidth + 10,
+  }),
+};
+
+const Card = styled.div``;
+
+const CardInfo = styled(motion.div)`
+  display: none;
+  width: 100%;
+  padding: 5%;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.gray};
+  color: white;
+`;
+
+const CardThumbnail = styled(motion.div)<{
+  bg?: string;
+  idx: number;
+  offset: number;
+}>`
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 6px;
+  background-image: url(${({ bg }) => bg});
+  background-size: contain;
   background-repeat: no-repeat;
   cursor: pointer;
-  box-shadow:
-    rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  transform-origin: center ${({ idx, offset }) => (idx === 0 ? 'left' : idx === offset - 1 ? 'right' : 'center')};
 `;
-// position: absolute;
-//     z-index: 3;
-//     display: grid;
-//     grid-template-columns: repeat(6, 1fr);
-//     gap: 10px;
-//     width: 100%;
-//     padding: 0px 60px;
 
-const PrevBtn = styled(GrPrevious)`
-  position: absolute;
-  font-size: 30px;
-  left: 0;
+const CardTitle = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  @media (max-width: 1023px) {
+    font-size: 16px;
+  }
 `;
-const NextBtn = styled(GrNext)`
-  position: absolute;
-  border: 1px solid red;
-  font-size: 30px;
-  right: 0;
+
+const CardDateAndRating = styled.div`
+  ${({ theme }) => theme.FlexRow};
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+  @media (max-width: 1080px) {
+    font-size: 12px;
+  }
+`;
+
+const CardDate = styled.p`
+  margin-right: 8px;
+  span {
+    color: ${({ theme }) => theme.colors.greey};
+    font-weight: 700;
+  }
+`;
+
+const CardRating = styled.p`
+  span {
+    color: #f8c707;
+    font-weight: 700;
+  }
 `;

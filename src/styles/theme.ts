@@ -9,7 +9,7 @@ const colors: DefaultTheme['colors'] = {
   pink: '#FF5D98',
   yellow: '#F8c707',
   gray: '#9A9A9A',
-  greey: '#A0C49D',
+  greey: '#40c057',
   lightdark: '#13161B',
   lightgreey: '#3FCF8E',
 };

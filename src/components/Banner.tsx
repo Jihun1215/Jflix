@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState } from 'state/atoms';
+import { modalIsOpenState, DetailContentId } from 'state/atoms';
 
-import {
-  IContent,
-  //   ITodayBestMovie,
-  //   ITodayMoive,
-} from 'type/type';
+import { IContent } from 'type/type';
 
 import { Modal } from './Modal';
+import { Spinner } from './Spinner';
 
 interface BannerProps {
   type: string;
@@ -23,9 +20,10 @@ import { FiInfo } from 'react-icons/fi';
 
 export const Banner = ({ type, contents, ranking }: BannerProps) => {
   const [, setIsmodalOpen] = useRecoilState(modalIsOpenState);
-
+  const [, setContentId] = useRecoilState(DetailContentId);
+  console.log(contents);
   if (contents === undefined) {
-    return <div>로딩 중 </div>;
+    return <Spinner />;
   }
 
   const BackGroundImg = getImgPath(contents?.backdrop_path);
@@ -34,9 +32,11 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
   const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 250)}...` : contents?.overview;
 
   const onClickModalOpen = () => {
-    // console.log(data);
     setIsmodalOpen(true);
+    setContentId(contents?.id);
   };
+
+  // console.log(contents);
 
   return (
     <>
@@ -48,11 +48,9 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
               {type === 'movie' ? <p>오늘의 {ranking + 1}위 영화</p> : <p>오늘의 {ranking + 1}위 Tv</p>}
             </TopText>
             <Title>{type === 'movie' ? `${contents?.title}` : `${contents?.name}`}</Title>
-            <GradeAndDate>
-              <span>평점: {contents?.vote_average}</span>
-              <span>{type === 'movie' ? `개봉일: ${contents?.release_date}` : `첫 개봉 ${contents?.first_air_date}`}</span>
-            </GradeAndDate>
-            <Overview>{truncatedText}</Overview>
+            <Overview>
+              {type === 'tv' ? <OverviewText>제공된 줄거리가 없습니다.</OverviewText> : <OverviewText>{truncatedText}</OverviewText>}{' '}
+            </Overview>
             <DetailArea>
               <button
                 onClick={() => {
@@ -115,25 +113,20 @@ const Title = styled.h1`
   font-weight: 700;
 `;
 
-const GradeAndDate = styled.div`
-  width: 60%;
-  height: 80px;
-  ${({ theme }) => theme.FlexRow};
-  align-items: center;
-  gap: 0 20px;
-  span {
-    width: 50%;
-    font-size: 18px;
-    font-weight: 700;
-  }
-`;
-
-const Overview = styled.p`
+const Overview = styled.div`
   width: 100%;
   height: 150px;
   font-size: 16px;
   ${({ theme }) => theme.BoxCenter};
   font-weight: 600;
+`;
+
+const OverviewText = styled.p`
+  ${({ theme }) => theme.WH100};
+  ${({ theme }) => theme.FlexRow};
+  align-items: center;
+  gap: 0 10px;
+  font-size: 18px;
 `;
 
 const DetailArea = styled.div`
@@ -144,7 +137,6 @@ const DetailArea = styled.div`
     width: 200px;
     height: 60px;
     background-color: #6d6d6eb3;
-    opacity: 0.9;
     font-size: 18px;
     font-weight: 700;
     ${({ theme }) => theme.BoxCenter};

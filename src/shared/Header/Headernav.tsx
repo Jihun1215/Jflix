@@ -58,7 +58,7 @@ const Nav = styled.ul`
   gap: 0 20px;
   align-items: center;
   list-style: none;
-  color: gray;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const Li = styled.li`

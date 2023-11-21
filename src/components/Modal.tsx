@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState } from 'state/atoms';
+import { modalIsOpenState, DetailContentId } from 'state/atoms';
 
 import { Spinner } from './Spinner';
 
 import { IContent } from 'type/type';
 import { getImgPath } from 'utils/api';
+// import { useEffect } from 'react';
 
 interface ModalProps {
   type: string;
@@ -15,9 +16,8 @@ interface ModalProps {
 
 export const Modal = ({ type, contents }: ModalProps) => {
   const [isModalOpen, setISModalOpen] = useRecoilState(modalIsOpenState);
-  console.log(type);
-  console.log(contents);
-
+  const [contentId] = useRecoilState(DetailContentId);
+  console.log(contentId, type);
   const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const targetTagName = e.currentTarget.tagName;
     if (targetTagName === 'SECTION') {
@@ -28,6 +28,7 @@ export const Modal = ({ type, contents }: ModalProps) => {
   const BackGroundImg = getImgPath(contents?.backdrop_path);
   const BackGroundposter = getImgPath(contents?.poster_path);
 
+  // genres 장르 ,
   return (
     <>
       {isModalOpen && (
@@ -36,8 +37,16 @@ export const Modal = ({ type, contents }: ModalProps) => {
             <Spinner />
           ) : (
             <ModalCard>
-              <ModalImg src={BackGroundImg} />
-              <Poster src={BackGroundposter} />
+              <ModalTopArea bg={BackGroundImg}>
+                <Poster src={BackGroundposter} />
+                <TitleArea>{contents?.title}</TitleArea>
+              </ModalTopArea>
+              <ModalBottomArea>
+                {/* {data && <div>{data?.genres.name[0]}</div>} */}
+                {/* {data?.map((v: any) => {
+                  return <div>{v?.genres.name}</div>;
+                })} */}
+              </ModalBottomArea>
             </ModalCard>
           )}
         </Container>
@@ -48,13 +57,13 @@ export const Modal = ({ type, contents }: ModalProps) => {
 
 const Container = styled.section`
   position: fixed;
+  top: 0;
+  bottom: 0;
   width: 100vw;
   height: 100vh;
   z-index: 9998;
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
-  /* height: 100vh; */
-  border: 1px solid red;
   ${({ theme }) => theme.BoxCenter};
 `;
 
@@ -65,16 +74,39 @@ const ModalCard = styled.div`
   border-radius: 12px;
   ${({ theme }) => theme.FlexCol};
   ${({ theme }) => theme.BoxCenter};
-  gap: 10px;
+  /* object-fit: cover; */
 `;
 
-const ModalImg = styled.img`
+const ModalTopArea = styled.div<{ bg: string }>`
+  position: relative;
   width: 100%;
-  height: 300px;
+  height: 65%;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background: ${({ bg }) => (bg ? `linear-gradient(rgb(1 0 0 / 43%), black) 0% 0% / cover no-repeat, url(${bg});` : 'transparent')};
+  background-position: 50% 50%;
+  padding: 10px;
+  ${({ theme }) => theme.BoxCenter};
+`;
+const Poster = styled.img`
+  position: absolute;
+  width: 350px;
+  height: 450px;
   border-radius: 12px;
 `;
 
-const Poster = styled.img`
-  width: 400px;
-  height: 400px;
+const TitleArea = styled.h2`
+  position: absolute;
+  /* z-index: 100; */
+  bottom: 100px;
+  left: 20%;
+  font-size: 24px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const ModalBottomArea = styled.div`
+  width: 100%;
+  height: 35%;
+  border: 1px solid red;
 `;

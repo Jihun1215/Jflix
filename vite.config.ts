@@ -13,7 +13,7 @@ export default defineConfig({
       { find: 'pages', replacement: '/src/pages' },
       { find: 'styles', replacement: '/src/styles' },
       { find: 'shared', replacement: '/src/shared' },
-      // { find: "element", replacement: "/src/element" },
+      { find: 'hooks', replacement: '/src/hooks' },
       { find: 'state', replacement: '/src/state' },
       { find: 'type', replacement: '/src/type' },
       { find: 'utils', replacement: '/src/utils' },

@@ -45,11 +45,13 @@ export const Header = () => {
 const Container = styled(motion.header)`
   width: 100vw;
   position: fixed;
+  z-index: 9999;
   top: 0;
   ${({ theme }) => theme.FlexRow};
   justify-content: space-between;
   padding: 20px 60px;
   color: ${({ theme }) => theme.colors.white};
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6) 15%, transparent);
   @media (max-width: 1024px) {
     padding: 15px 40px;
   }
