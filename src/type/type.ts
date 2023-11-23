@@ -1,3 +1,42 @@
+export interface IGenre {
+  id: number;
+  name: string;
+}
+
+export interface IModalContent {
+  // 19이상
+  adult: boolean;
+  backdrop_path: string;
+  belongs_to_collection: null;
+  budget: number;
+  // 장르
+  genres: IGenre[];
+  homepage: string;
+  id: string;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  production_companies: Icompanies[];
+  production_countries: ICountries[];
+
+  poster_path: string;
+  release_date: string;
+
+  revenue: number;
+  runtime: number;
+  spoken_languages: IspokenLanguages[];
+  status: string;
+  tagline: string;
+
+  title: string;
+  video: boolean;
+  // 평점
+  vote_average: number;
+  // 투표수
+  vote_count: number;
+}
+
 export interface ITodayBestMovie {
   // 19이상
   adult: boolean;
@@ -65,6 +104,24 @@ export interface IContent {
   number_of_episodes: number;
 }
 
+export interface Icompanies {
+  id: number;
+  logo_path: string;
+  name: string;
+  origin_country: string;
+}
+
+export interface ICountries {
+  iso_3166_1: string;
+  name: string;
+}
+
+export interface IspokenLanguages {
+  english_name: string;
+  iso_639_1: string;
+  name: string;
+}
+
 export interface ICast {
   name: string;
   original_name: string;
@@ -80,11 +137,6 @@ export interface IVideo {
   official: boolean;
   published_at: string;
   id: string;
-}
-
-export interface IGenre {
-  id: number;
-  name: string;
 }
 
 export interface INetwork {

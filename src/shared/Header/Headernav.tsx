@@ -9,8 +9,7 @@ import {
 export const Headernav = () => {
   const navigate = useNavigate();
 
-  const homeMatch: PathMatch<string> | null = useMatch('/');
-  const movieMatch: PathMatch<string> | null = useMatch('/movie');
+  const movieMatch: PathMatch<string> | null = useMatch('/');
   const tvMatch: PathMatch<string> | null = useMatch('/tv');
   const mylistMatch: PathMatch<string> | null = useMatch('/mylist');
 
@@ -21,15 +20,7 @@ export const Headernav = () => {
           navigate('/');
         }}
       >
-        홈<AnimatePresence>{homeMatch && <Circle />}</AnimatePresence>
-      </Li>
-      <Li
-        onClick={() => {
-          navigate('/movie');
-        }}
-      >
-        영화
-        <AnimatePresence>{movieMatch && <Circle className="movie" />}</AnimatePresence>
+        영화<AnimatePresence>{movieMatch && <Circle className="movie" />}</AnimatePresence>
       </Li>
       <Li
         onClick={() => {

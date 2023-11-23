@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+
+import { useRecoilState } from 'recoil';
+import { modalIsOpenState, ModalContentData } from 'state/atoms';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -9,11 +12,7 @@ import { useDebouncedResize } from 'hooks/useDebouncedResize';
 import { GrPrevious, GrNext } from 'react-icons/gr';
 import { getImgPath } from 'utils/api';
 
-import {
-  IContent,
-  //   ITodayBestMovie,
-  //   ITodayMoive,
-} from 'type/type';
+import { IContent } from 'type/type';
 
 interface ISliderVariantsProps {
   movingBack: boolean;
@@ -21,14 +20,13 @@ interface ISliderVariantsProps {
 }
 
 interface SliderProps {
-  type: string;
-  contents?: IContent[];
+  contents: IContent[];
   title: string;
 }
 //  Card 컴포넌트 애니메이션
 const cardVariants = {
   hover: {
-    scale: 1.3,
+    scale: 1.2,
     transition: {
       delay: 0.5,
       duaration: 0.3,
@@ -49,7 +47,23 @@ const infoVariants = {
   },
 };
 
-export const Slider = ({ type, contents, title }: SliderProps) => {
+const sliderVariants = {
+  enter: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
+    x: movingBack ? -windowWidth + 10 : windowWidth - 10,
+  }),
+  show: {
+    x: 0,
+  },
+  exit: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
+    x: movingBack ? windowWidth - 10 : -windowWidth + 10,
+  }),
+};
+
+export const Slider = ({  contents, title }: SliderProps) => {
+  const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
+  const [, setModalInData] = useRecoilState(ModalContentData);
+
+
   // Slider layout
   const windowWidth = useDebouncedResize();
 
@@ -71,19 +85,17 @@ export const Slider = ({ type, contents, title }: SliderProps) => {
   // props 받은 배열의 길이
   const listLength = contents?.length;
 
-  // 최대 Index 길이
+  // 최대 Slider 할 수있는 Index
   const maxIndex = Math.floor(listLength / offset) - 1;
 
   // console.log('offset', offset, type);
   // console.log('index', index);
   // console.log('MaxIndex', maxIndex);
+
   // Slider Moving
   const [isPrevBtnDisabled, setIsPrevBtnDisabled] = useState(true);
   const [moving, setMoving] = useState(false);
   const [movingBack, setMovingBack] = useState(false);
-  // console.log('offset', offset);
-  // console.log('index', index);
-  // console.log('MaxIndex', maxIndex);
 
   const onClickPrenBtn = () => {
     if (contents) {
@@ -110,9 +122,11 @@ export const Slider = ({ type, contents, title }: SliderProps) => {
     setMovingBack(false);
   };
 
-  const navigate = useNavigate();
-  const onBoxClick = (id: number) => {
-    navigate(`?id=${id}`);
+
+
+  const onClickModalOpen = (data: IContent) => {
+    setIsModalOpen(true);
+    setModalInData(data);
   };
 
   return (
@@ -138,11 +152,11 @@ export const Slider = ({ type, contents, title }: SliderProps) => {
           >
             {contents?.slice(offset * index, offset * index + offset).map((data, idx) => (
               <Card key={data.id}>
-                <CardThumbnail
+                <CardPoster
                   bg={getImgPath(data.backdrop_path)}
                   idx={idx}
                   offset={offset}
-                  onClick={() => onBoxClick(data.id)}
+                  onClick={() => onClickModalOpen(data)}
                   variants={cardVariants}
                   whileHover="hover"
                 >
@@ -158,7 +172,7 @@ export const Slider = ({ type, contents, title }: SliderProps) => {
                       </CardRating>
                     </CardDateAndRating>
                   </CardInfo>
-                </CardThumbnail>
+                </CardPoster>
               </Card>
             ))}
           </SliderWrapper>
@@ -191,6 +205,7 @@ const Title = styled.h2`
   font-size: 24px;
   ${({ theme }) => theme.BoxCenter};
   font-weight: 700;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const SliderContainer = styled.div`
@@ -212,6 +227,7 @@ const Button = styled.button`
   background-color: transparent;
   font-size: 20px;
   z-index: 5;
+  color: ${({ theme }) => theme.colors.white};
 
   ${(props) =>
     !props.disabled &&
@@ -220,6 +236,8 @@ const Button = styled.button`
       &:hover {
         cursor: pointer;
         opacity: 1;
+        transform: scale(1.1);
+        transition: 0.3s;
       }
     `}
 `;
@@ -247,18 +265,6 @@ const SliderWrapper = styled(motion.div)<{ offset: number }>`
   }
 `;
 
-const sliderVariants = {
-  enter: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
-    x: movingBack ? -windowWidth + 10 : windowWidth - 10,
-  }),
-  show: {
-    x: 0,
-  },
-  exit: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
-    x: movingBack ? windowWidth - 10 : -windowWidth + 10,
-  }),
-};
-
 const Card = styled.div``;
 
 const CardInfo = styled(motion.div)`
@@ -268,16 +274,17 @@ const CardInfo = styled(motion.div)`
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   background-color: ${({ theme }) => theme.colors.gray};
-  color: white;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
-const CardThumbnail = styled(motion.div)<{
+const CardPoster = styled(motion.div)<{
   bg?: string;
   idx: number;
   offset: number;
 }>`
   width: 100%;
-  padding-top: 56.25%;
+  padding-top: 56%;
+  /* border: 1px solid red; */
   border-radius: 6px;
   background-image: url(${({ bg }) => bg});
   background-size: contain;
@@ -315,7 +322,7 @@ const CardDate = styled.p`
 
 const CardRating = styled.p`
   span {
-    color: #f8c707;
+    color: ${({ theme }) => theme.colors.yellow};
     font-weight: 700;
   }
 `;

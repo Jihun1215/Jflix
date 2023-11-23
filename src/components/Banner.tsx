@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, DetailContentId } from 'state/atoms';
+import { modalIsOpenState } from 'state/atoms';
 
 import { IContent } from 'type/type';
 
-import { Modal } from './Modal';
 import { Spinner } from './Spinner';
 
 interface BannerProps {
@@ -18,30 +17,30 @@ import { getImgPath } from 'utils/api';
 import Logo from 'assets/svg/netflixlogo.svg?react';
 import { FiInfo } from 'react-icons/fi';
 
+import { ModalContentData } from 'state/atoms';
+
 export const Banner = ({ type, contents, ranking }: BannerProps) => {
   const [, setIsmodalOpen] = useRecoilState(modalIsOpenState);
-  const [, setContentId] = useRecoilState(DetailContentId);
-  console.log(contents);
+
+  const [, setModalInData] = useRecoilState(ModalContentData);
+  // console.log(contents);
   if (contents === undefined) {
     return <Spinner />;
   }
 
   const BackGroundImg = getImgPath(contents?.backdrop_path);
-  const BackGroundposter = getImgPath(contents?.poster_path);
 
-  const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 250)}...` : contents?.overview;
+  const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 150)}...` : contents?.overview;
 
   const onClickModalOpen = () => {
     setIsmodalOpen(true);
-    setContentId(contents?.id);
+    setModalInData(contents);
   };
-
-  // console.log(contents);
 
   return (
     <>
       {contents && (
-        <Container img={BackGroundImg} poster={BackGroundposter}>
+        <Container img={BackGroundImg}>
           <Card>
             <TopText>
               <NetflixLogo />
@@ -64,13 +63,11 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
           </Card>
         </Container>
       )}
-
-      <Modal type={type} contents={contents} />
     </>
   );
 };
 
-const Container = styled.section<{ img: string; poster: string }>`
+const Container = styled.section<{ img: string }>`
   width: 100%;
   height: 80vh;
   padding: 200px 0 0 60px;
@@ -78,6 +75,13 @@ const Container = styled.section<{ img: string; poster: string }>`
   justify-content: center;
   background-size: cover;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url(${(props) => props.img});
+  @media (max-width: 1024px) {
+    padding-left: 40px;
+  }
+
+  @media (max-width: 600px) {
+    padding-left: 20px;
+  }
 `;
 
 const Card = styled.div`
@@ -86,6 +90,13 @@ const Card = styled.div`
   padding: 10px;
   ${({ theme }) => theme.FlexCol};
   color: ${({ theme }) => theme.color2};
+  @media (max-width: 1024px) {
+    width: 500px;
+  }
+
+  @media (max-width: 600px) {
+    width: 350px;
+  }
 `;
 
 const TopText = styled.div`
@@ -114,11 +125,18 @@ const Title = styled.h1`
 `;
 
 const Overview = styled.div`
-  width: 100%;
-  height: 150px;
+  width: 100vw;
+  height: 300px;
   font-size: 16px;
   ${({ theme }) => theme.BoxCenter};
   font-weight: 600;
+  @media (max-width: 1024px) {
+    width: 500px;
+  }
+
+  @media (max-width: 600px) {
+    width: 350px;
+  }
 `;
 
 const OverviewText = styled.p`

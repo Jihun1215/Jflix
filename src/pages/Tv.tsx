@@ -34,14 +34,14 @@ export const Tv = () => {
   if (isError) {
     return <div>1isError</div>;
   }
-  
+
   const randomNumber = Math.floor(Math.random() * 5);
   return (
     <Container>
       <Banner type="tv" contents={popularLists?.results?.[randomNumber]} ranking={randomNumber} />
-      <Slider type="tv" contents={popularLists?.results} title="현재 인기있는 TV" />
-      <Slider type="tv" contents={airingTodayLists?.results} title="오늘방영 TV" />
-      <Slider type="tv" contents={topRatedTvData?.results} title="최고평점 TV" />
+      <Slider contents={popularLists?.results} title="현재 인기있는 TV" />
+      <Slider contents={airingTodayLists?.results} title="오늘방영 TV" />
+      <Slider contents={topRatedTvData?.results} title="최고평점 TV" />
       {/* <Slider type="tv" contents={onTheAirLists?.results} title="방영 예정 TV" /> */}
     </Container>
   );

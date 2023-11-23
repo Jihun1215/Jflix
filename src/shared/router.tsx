@@ -4,7 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { App } from '../App';
 import { Layout } from 'shared/Layout';
-import { Home, Movie, Tv, MyList, Detail, NotFound } from 'pages';
+import { Home,  Tv, MyList, Detail, NotFound } from 'pages';
 
 export const router = createBrowserRouter([
   {
@@ -19,10 +19,6 @@ export const router = createBrowserRouter([
       {
         element: <Layout />,
         children: [{ path: '/', element: <Home /> }],
-      },
-      {
-        element: <Layout />,
-        children: [{ path: '/movie', element: <Movie /> }],
       },
       {
         element: <Layout />,
