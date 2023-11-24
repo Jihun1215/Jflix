@@ -4,6 +4,7 @@ const colors: DefaultTheme['colors'] = {
   white: '#FFFFFF',
   black: '#000000',
   black2: '#13161B',
+  red: '#f03e3e',
   blue: '#337ab7',
   purple: '#A341FF',
   pink: '#FF5D98',

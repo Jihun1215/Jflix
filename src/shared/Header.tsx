@@ -45,7 +45,7 @@ export const Header = () => {
 const Container = styled(motion.header)`
   width: 100vw;
   position: fixed;
-  z-index: 9997;
+  z-index: 9990;
   top: 0;
   ${({ theme }) => theme.FlexRow};
   justify-content: space-between;

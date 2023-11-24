@@ -3,7 +3,6 @@ import axios from 'axios';
 const ApiKey = import.meta.env.VITE_API_KEY;
 const URL = 'https://api.themoviedb.org/3/';
 
-
 const axiosInstance = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
   params: { api_key: ApiKey, language: 'ko-KR', region: 'KR' },

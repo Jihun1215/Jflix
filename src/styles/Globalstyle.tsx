@@ -1,6 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-// import Font from "../assets/fonts/KBO-Dia-Gothic_bold.woff";
-// import Font2 from "../assets/fonts/Pretendard-Regular.woff";
 
 export const GlobalStyle = createGlobalStyle`
 *{
@@ -14,7 +12,6 @@ body {
   margin: 0;
   overflow-x: hidden;
   width : 100vw;
-  height: 100vh;
   font-weight: 500;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

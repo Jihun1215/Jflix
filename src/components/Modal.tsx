@@ -9,18 +9,18 @@ import { motion } from 'framer-motion';
 
 import { Spinner } from './Spinner';
 
-
 import { useQuery } from 'react-query';
-import { getImgPath, getModalContentData, getContentCase } from 'utils/api';
+import { getImgPath, getModalContentData } from 'utils/api';
 import { IGenre } from 'type/type';
 
 import { IoClose } from 'react-icons/io5';
+
+import { Actor } from './modal/Actor';
 
 export const Modal = () => {
   const location = useLocation();
 
   const type = location.pathname === '/' ? 'movie' : 'tv';
-  // console.log(type);
   const [isModalOpen, setISModalOpen] = useRecoilState(modalIsOpenState);
 
   const [modalInData, setModalInData] = useRecoilState(ModalContentData);
@@ -30,15 +30,6 @@ export const Modal = () => {
     isLoading: DetailLoading,
     // isError: DetailError,
   } = useQuery(['popularMovie', type, 'id'], () => getModalContentData(type, modalInData?.id));
-  // console.log('모달데이터', modalList);
-
-  const {
-    data: caseList,
-    isLoading: caseLoading,
-    // isError: DetailError,
-  } = useQuery(['contentCase', type, 'id'], () => getContentCase(type, modalInData?.id));
-  console.log('모달안 상세 데이터', modalList);
-  console.log('배우데이터', caseList);
 
   const onClickCloseModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const element = e.target as HTMLElement;
@@ -53,16 +44,21 @@ export const Modal = () => {
   const BackGroundImg = getImgPath(modalInData?.backdrop_path);
   const BackGroundposter = getImgPath(modalInData?.poster_path);
 
-  const isLoading = DetailLoading || caseLoading;
+  const isLoading = DetailLoading ;
 
   const genres: IGenre[] | undefined = modalList?.genres;
 
+  let grade = modalList?.vote_average;
+  grade = Math.round(grade * 10) / 10;
+
+
+  const truncatedText = modalList?.overview.length > 150 ? `${modalList?.overview.slice(0, 150)}...` : modalList?.overview;
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  // genres 장르 ,
+
   return (
     <>
       {isModalOpen && (
@@ -71,25 +67,39 @@ export const Modal = () => {
             <Spinner />
           ) : (
             <ModalCard animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
-              <ModalTopArea bg={BackGroundImg}>
+              <CardWrapper>
                 <CloseBtn fill="#FFF" />
-                <Poster src={BackGroundposter} />
-                <TitleArea>{modalList?.title}</TitleArea>
-              </ModalTopArea>
-              <ModalBottomArea>
-                <GenresAndRuntime>
-                  {genres?.map((data: IGenre, index: number) => {
-                    return <Genres key={index}>{data?.name}</Genres>;
-                  })}
-                  <span />
-                  <Runtime>{modalList?.runtime}분</Runtime>
-                </GenresAndRuntime>
-                {/* {modalList?.overview === '' ? <p>제공된 정보가 없습니다.</p> : <p>{modalList?.overview}</p>}
-                <br />
-                개봉일: {modalList?.release_date}
-                <br />
-                <p>{modalList?.genres[0].name}</p> */}
-              </ModalBottomArea>
+                <ModalImgArea bg={BackGroundImg}>
+                  <Poster src={BackGroundposter} />
+                </ModalImgArea>
+                <ModalContentInfo>
+                  <DataInfoArea>
+                    {genres?.map((data: IGenre, index: number) => {
+                      return <Genres key={index}>{data?.name}</Genres>;
+                    })}
+                    <span />
+                    {type === 'movie' ? <RuntimeAndSeasons>{modalList?.runtime}분</RuntimeAndSeasons> : null}
+                    {type === 'tv' ? <RuntimeAndSeasons>시즌 {modalList?.seasons.length}</RuntimeAndSeasons> : null}
+                    {type === 'tv' ? <RuntimeAndSeasons>에피소드 {modalList?.number_of_episodes}</RuntimeAndSeasons> : null}
+                  </DataInfoArea>
+
+                  <Title>
+                    <h2>{type === 'movie' ? `${modalList?.title}` : `${modalList?.name}`}</h2>
+                  </Title>
+
+                  <DateAndVoteAverage>
+                    <Date>
+                      {type === 'movie' ? '개봉일: ' : '첫방영: '}
+                      {type === 'movie' ? <span> {modalList?.release_date}</span> : <span>{modalList?.first_air_date}</span>}
+                    </Date>
+                    <VoteAverage>
+                      평점: <span>{grade}</span>
+                    </VoteAverage>
+                  </DateAndVoteAverage>
+                  <Overview>{modalList?.overview === '' ? <p>제공된 정보가 없습니다.</p> : <p>{truncatedText}</p>}</Overview>
+                </ModalContentInfo>
+                <Actor />
+              </CardWrapper>
             </ModalCard>
           )}
         </Container>
@@ -101,40 +111,54 @@ export const Modal = () => {
 const Container = styled(motion.section)`
   position: fixed;
   inset: 0;
-  /* top: 0; */
-  /* bottom: 0; */
   width: 100vw;
-  /* height: 100%; */
-  z-index: 9998;
+  z-index: 9995;
   overflow-y: scroll;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   ${({ theme }) => theme.BoxCenter};
   opacity: 0;
 `;
 
 const ModalCard = styled(motion.div)`
-  width: min(90%, 900px);
+  width: min(85%, 900px);
   height: 90vh;
-  overflow-y: scroll;
+  overflow-y: auto;
+  z-index: 9999;
+  overflow-x: hiddens;
   background-color: ${({ theme }) => theme.colors.black};
   color: ${({ theme }) => theme.colors.white};
   border-radius: 12px;
-  ${({ theme }) => theme.FlexCol};
-  ${({ theme }) => theme.BoxCenter};
-  /* overflow: hidden; */
 `;
 
-const ModalTopArea = styled.div<{ bg: string }>`
+const CardWrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 60%;
+  height: 1100px;
+  ${({ theme }) => theme.FlexCol};
+  ${({ theme }) => theme.FlexCenter};
+`;
+
+const ModalImgArea = styled.div<{ bg: string }>`
+  position: relative;
+  width: 100%;
+  height: 450px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   background: ${({ bg }) => (bg ? `linear-gradient(rgb(1 0 0 / 43%), black) 0% 0% / cover no-repeat, url(${bg});` : 'transparent')};
   background-position: 50% 50%;
   padding: 10px;
   ${({ theme }) => theme.BoxCenter};
+  background-size: cover;
 `;
+
+const ModalContentInfo = styled.div`
+  width: 100%;
+  height: 300px;
+  padding: 20px 40px;
+  ${({ theme }) => theme.FlexCol};
+  align-items: center;
+`;
+
 const Poster = styled.img`
   position: absolute;
   width: 350px;
@@ -150,25 +174,7 @@ const Poster = styled.img`
   }
 `;
 
-const TitleArea = styled.h2`
-  position: absolute;
-  /* z-index: 100; */
-  bottom: 100px;
-  left: 20%;
-  font-size: 24px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.white};
-`;
-
-const ModalBottomArea = styled.div`
-  width: 100%;
-  height: 40%;
-  padding: 20px 40px;
-  ${({ theme }) => theme.FlexCol};
-  align-items: center;
-`;
-
-const GenresAndRuntime = styled.div`
+const DataInfoArea = styled.div`
   width: 100%;
   height: 40px;
   ${({ theme }) => theme.FlexRow};
@@ -181,24 +187,61 @@ const GenresAndRuntime = styled.div`
     background-color: #d9d9dc;
   }
   p {
-    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
   }
 `;
 
 const Genres = styled.p`
-  padding: 4px 8px;
-  background-color: red;
-  border-radius: 6px;
+  background-color: ${({ theme }) => theme.colors.red};
   font-weight: 700;
+  text-align: center;
 `;
 
-const Runtime = styled.p`
-  padding: 4px 8px;
+const RuntimeAndSeasons = styled.p`
   background-color: ${({ theme }) => theme.colors.lightgreey};
-  border-radius: 6px;
 `;
 
-// const TitleArea = styled.``
+const Title = styled.div`
+  width: 100%;
+  height: 50px;
+  font-size: 24px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.FlexRow};
+  align-items: center;
+`;
+
+const DateAndVoteAverage = styled.div`
+  width: 100%;
+  height: 50px;
+  ${({ theme }) => theme.FlexRow};
+  align-items: center;
+`;
+
+const Date = styled.p`
+  padding: 6px 12px;
+  font-weight: 600;
+  span {
+    color: ${({ theme }) => theme.colors.greey};
+  }
+`;
+
+const VoteAverage = styled.p`
+  padding: 6px 12px;
+  font-weight: 600;
+  span {
+    color: ${({ theme }) => theme.colors.yellow};
+  }
+`;
+
+const Overview = styled.div`
+  width: 100%;
+  height: 100px;
+  ${({ theme }) => theme.FlexRow};
+  align-items: center;
+`;
 
 const CloseBtn = styled(IoClose)`
   position: absolute;

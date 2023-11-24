@@ -5,6 +5,7 @@ import { getContents } from 'utils/api';
 import { Banner, Slider, Spinner } from 'components';
 
 export const Tv = () => {
+
   const type = 'tv';
   const {
     data: popularLists,
@@ -50,4 +51,5 @@ export const Tv = () => {
 const Container = styled.div`
   width: 100vw;
   height: 200vh;
+  overflow-x: hidden;
 `;

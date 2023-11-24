@@ -1,6 +1,6 @@
-import "styled-components";
+import 'styled-components';
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme {
     WH100: RuleSet<object>;
     FlexCol: RuleSet<object>;
@@ -18,6 +18,7 @@ declare module "styled-components" {
       white: string;
       black: string;
       black2: string;
+      red: string;
       blue: string;
       purple: string;
       pink: string;
