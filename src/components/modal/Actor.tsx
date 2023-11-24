@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import styled from 'styled-components';
 
 import { useLocation } from 'react-router-dom';
@@ -15,11 +13,6 @@ import { Spinner } from 'components/Spinner';
 import { ICast } from 'type/type';
 
 export const Actor = () => {
-  const offset = 6;
-  const [index, setIndex] = useState(offset);
-
-  console.log('배우데이터', index);
-
   const location = useLocation();
 
   const type = location.pathname === '/' ? 'movie' : 'tv';
@@ -39,7 +32,17 @@ export const Actor = () => {
     <Contianer>
       <Title>출연진</Title>
       <GridWrapper>
-       
+        {caseList?.cast.map((data: ICast, index: number) => {
+          return (
+            <ActorArea key={index}>
+              <ActorImg bg={data.profile_path ? getImgPath(data.profile_path) : null} />
+              <ActorInfo>
+                <div className="name">{data.name}</div>
+                <div className="character">{data.character}</div>
+              </ActorInfo>
+            </ActorArea>
+          );
+        })}
       </GridWrapper>
     </Contianer>
   );
@@ -49,11 +52,9 @@ const Contianer = styled.div`
   width: 100%;
   height: 350px;
   padding: 10px;
-  border: 1px solid red;
 `;
 
 const Title = styled.h1`
-  border: 1px solid red;
   font-size: 24px;
   margin-bottom: 20px;
   margin-top: 50px;
@@ -92,13 +93,13 @@ const ActorImg = styled.div<{ bg: string }>`
 const ActorInfo = styled.div`
   text-align: center;
   .name {
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 5px;
   }
   .character {
-    font-size: 12px;
-    font-weight: 300;
+    font-size: 14px;
+    font-weight: 400;
     font-style: italic;
-    opacity: 0.8;
+    color: ${({ theme }) => theme.colors.gray};
   }
 `;
