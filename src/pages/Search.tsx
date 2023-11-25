@@ -1,12 +1,37 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { useQuery } from 'react-query';
 import { getSerchContent, getSerchtvContent } from 'utils/api';
 
 import { GrLinkPrevious } from 'react-icons/gr';
 
+// interface ISearchContent {
+//   adult: boolean;
+//   backdrop_path: string;
+//   genre_ids: string[];
+//   id: number;
+//   original_language: string;
+//   original_title: string;
+//   overview: string;
+//   popularity: number;
+//   poster_path: string;
+//   release_date: string;
+//   title: string;
+//   video: boolean;
+//   vote_average: number;
+//   vote_count: number;
+// }
+
 export const Search = () => {
+  // const tabs = [{ type: 'movie' }, { type: 'tv' }];
+  // const { section } = useParams();
+  // console.log(section);
+  const [selectedTab, setSelectedTab] = useState<string>('movie');
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
@@ -17,7 +42,10 @@ export const Search = () => {
     navigate(-1);
   };
 
-
+  const onClickTab = (section: string) => {
+    setSelectedTab(section);
+    // navigate(`/search/${section}?q=${keyword}`);
+  };
 
   const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(query));
   const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(query));
@@ -42,6 +70,14 @@ export const Search = () => {
           <P>의 관련된 검색 결과</P>
         </SearchWord>
       </TitleAndGoback>
+      <Tabnav>
+        <Tab isActive={selectedTab === 'movie'} onClick={() => onClickTab('movie')}>
+          영화
+        </Tab>
+        <Tab isActive={selectedTab === 'tv'} onClick={() => onClickTab('tv')}>
+          티비
+        </Tab>
+      </Tabnav>
     </Container>
   );
 };
@@ -103,3 +139,22 @@ const P = styled.p`
   color: ${({ theme }) => theme.colors.gray};
 `;
 
+const Tabnav = styled.nav`
+  width: 100%;
+  height: 50px;
+  padding-top: 50px;
+  ${({ theme }) => theme.BoxCenter};
+`;
+
+const Tab = styled.p<{ isActive: boolean }>`
+  width: 150px;
+  height: 50px;
+  ${({ theme }) => theme.BoxCenter};
+  font-size: 24px;
+  font-weight: 700;
+  padding-bottom: 3px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: ${(props) => (props.isActive ? '#E51013' : '#FFFFFF')};
+  border-bottom: ${(props) => props.isActive && '3px solid #E51013'};
+`;

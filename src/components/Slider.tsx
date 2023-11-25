@@ -88,10 +88,6 @@ export const Slider = ({  contents, title }: SliderProps) => {
   // 최대 Slider 할 수있는 Index
   const maxIndex = Math.floor(listLength / offset) - 1;
 
-  // console.log('offset', offset, type);
-  // console.log('index', index);
-  // console.log('MaxIndex', maxIndex);
-
   // Slider Moving
   const [isPrevBtnDisabled, setIsPrevBtnDisabled] = useState(true);
   const [moving, setMoving] = useState(false);

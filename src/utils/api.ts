@@ -34,7 +34,7 @@ export const getContentCase = async (type: string, id: number | undefined) => {
   return response.data;
 };
 
-export const getSerchContent = async (query: string) => {
+export const getSerchContent = async (query: string | null) => {
   // console.log(query);
   const params = { api_key: ApiKey, language: 'ko-KR', region: 'KR', query };
 
@@ -43,7 +43,7 @@ export const getSerchContent = async (query: string) => {
   return response.data;
 };
 
-export const getSerchtvContent = async (query: string) => {
+export const getSerchtvContent = async (query: string | null) => {
   // console.log(query);
   const params = { api_key: ApiKey, language: 'ko-KR', region: 'KR', query };
 
