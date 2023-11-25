@@ -12,6 +12,8 @@ import { Spinner } from 'components/Spinner';
 
 import { ICast } from 'type/type';
 
+import DefaultProfile from 'assets/defaultProfile.png';
+
 export const Actor = () => {
   const location = useLocation();
 
@@ -35,7 +37,7 @@ export const Actor = () => {
         {caseList?.cast.map((data: ICast, index: number) => {
           return (
             <ActorArea key={index}>
-              <ActorImg bg={data.profile_path ? getImgPath(data.profile_path) : null} />
+              <ActorImg bg={data.profile_path ? getImgPath(data.profile_path) : DefaultProfile} />
               <ActorInfo>
                 <div className="name">{data.name}</div>
                 <div className="character">{data.character}</div>
@@ -83,7 +85,7 @@ const ActorArea = styled.div`
 const ActorImg = styled.div<{ bg: string }>`
   width: 100%;
   aspect-ratio: 1 / 1;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   border-radius: 2px;
   background-image: url(${(props) => props.bg});
   background-size: cover;
