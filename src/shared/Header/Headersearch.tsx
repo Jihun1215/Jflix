@@ -1,51 +1,81 @@
 import { useState, useRef, SetStateAction } from 'react';
 import styled from 'styled-components';
 
+// import { useQuery } from 'react-query';
+// import { getSerchContent } from 'utils/api';
+
+import { useNavigate } from 'react-router-dom';
+
 import { FiSearch } from 'react-icons/fi';
 
 export const Headersearch = () => {
+  const navigate = useNavigate();
+
   const [searchValue, setSearcvalue] = useState('');
 
   const valueRef = useRef<HTMLInputElement>(null);
 
   const [isInput, setIsInput] = useState<boolean>(false);
 
-  const onClickSearcIcon = () => {
-    setIsInput(!isInput);
-  };
-
   const onChangeValue = (e: { target: { value: SetStateAction<string> } }) => {
     setSearcvalue(e.target.value);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = (e: any | null) => {
+  const onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (searchValue === '') {
       // valueRef.current.focus();
       return;
     }
-    console.log(e);
+    navigate(`/search/movie?q=${searchValue}`);
+    setIsInput(false);
+    setSearcvalue('');
+  };
+
+  const onClickCloseModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const element = e.target as HTMLElement;
+    const TagName = element.tagName;
+    e.stopPropagation();
+    if (TagName === 'DIV') {
+      setIsInput(false);
+      setSearcvalue('');
+    } else if (TagName === 'svg' || TagName === 'circle') {
+      setIsInput(true);
+      setSearcvalue('');
+    }
   };
 
   return (
-    <SearchArea onSubmit={onSubmit}>
-      <SearchInput
-        type="text"
-        ref={valueRef}
-        isinput={isInput.toString()}
-        value={searchValue}
-        onChange={onChangeValue}
-        placeholder="검색어를 입력해주세요"
-      />
-      <SearcIcon isinput={isInput.toString()} onClick={onClickSearcIcon} />
-    </SearchArea>
+    <div onClick={onClickCloseModal}>
+      {isInput && <Container />}
+      <SearchArea onSubmit={onSubmit}>
+        <SearchInput
+          type="text"
+          ref={valueRef}
+          isinput={isInput.toString()}
+          value={searchValue}
+          onChange={onChangeValue}
+          placeholder="검색어를 입력해주세요"
+        />
+        <SearcIcon isinput={isInput.toString()} />
+      </SearchArea>
+    </div>
   );
 };
+
+const Container = styled.div`
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.6);
+  ${({ theme }) => theme.BoxCenter};
+`;
 
 const SearchArea = styled.form`
   position: relative;
   width: 200px;
+  height: 30px;
   ${({ theme }) => theme.BoxCenter};
   z-index: 10000;
 `;

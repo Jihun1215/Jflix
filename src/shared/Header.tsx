@@ -1,14 +1,46 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
+
+
 import HeaderLogo from 'assets/svg/netflix.svg?react';
 import { motion, useScroll, useAnimation } from 'framer-motion';
 
 import { Headernav } from './Header/Headernav';
 import { Headersearch } from './Header/Headersearch';
-// import { motion, useScroll, useAnimation, AnimatePresence } from 'framer-motion';
+
+const logoVariants = {
+  start: {
+    pathLength: 0,
+    fill: 'rgba(229, 16, 19, 0)',
+  },
+  end: {
+    pathLength: 1,
+    fill: 'rgba(229, 16, 19, 1)',
+    transition: {
+      default: { duration: 5, ease: 'easeInOut' },
+      fill: { duration: 3, ease: [1, 0, 0.8, 1] },
+    },
+  },
+  hover: {
+    scale: 0.9,
+    transition: {
+      yoyo: Infinity,
+    },
+  },
+};
+
+const headerVariants = {
+  top: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+  },
+  scroll: {
+    backgroundColor: 'rgba(0, 0, 0, 1)',
+  },
+};
 
 export const Header = () => {
+
   // Nav scroll animation
   const { scrollY } = useScroll();
   const headerAnimation = useAnimation();
@@ -77,34 +109,3 @@ const MainLogo = styled(HeaderLogo)`
     stroke-width: 5px;
   }
 `;
-
-const logoVariants = {
-  start: {
-    pathLength: 0,
-    fill: 'rgba(229, 16, 19, 0)',
-  },
-  end: {
-    pathLength: 1,
-    fill: 'rgba(229, 16, 19, 1)',
-    transition: {
-      default: { duration: 5, ease: 'easeInOut' },
-      fill: { duration: 3, ease: [1, 0, 0.8, 1] },
-    },
-  },
-  hover: {
-    scale: 0.9,
-    transition: {
-      yoyo: Infinity,
-    },
-  },
-};
-
-const headerVariants = {
-  top: {
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-  },
-  scroll: {
-    backgroundColor: 'rgba(0, 0, 0, 1)',
-  },
-};
-export { Headersearch };
