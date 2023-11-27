@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalContentData } from 'state/atoms';
+import { modalIsOpenState, ModalContentData, MyListContentState } from 'state/atoms';
 
 import { motion } from 'framer-motion';
 
@@ -14,6 +14,7 @@ import { getImgPath, getModalContentData } from 'utils/api';
 import { IGenre } from 'type/type';
 
 import { IoClose } from 'react-icons/io5';
+import { GoPlusCircle, GoCheckCircle } from 'react-icons/go';
 
 import { Actor } from './modal/Actor';
 
@@ -35,29 +36,72 @@ export const Modal = () => {
     const element = e.target as HTMLElement;
     const TagName = element.tagName;
     e.stopPropagation();
-    if (TagName === 'SECTION' || TagName === 'svg' || TagName === 'path') {
+    console.log(TagName);
+    if (TagName === 'SECTION') {
       setISModalOpen(false);
       setModalInData(undefined);
     }
+  };
+  const onCloseModal = () => {
+    setISModalOpen(false);
+    setModalInData(undefined);
   };
 
   const BackGroundImg = getImgPath(modalInData?.backdrop_path);
   const BackGroundposter = getImgPath(modalInData?.poster_path);
 
-  const isLoading = DetailLoading ;
+  const isLoading = DetailLoading;
 
   const genres: IGenre[] | undefined = modalList?.genres;
 
+  // mylist code
+  const [saveContent, setSaveContent] = useRecoilState(MyListContentState);
+
+  // console.log(saveContent);
+
+  const existingItem = saveContent.find((item: { id: number; type: string }) => item.id === modalList?.id);
+  const isSaveList = Boolean(existingItem);
+  // console.log(isSaveList);
+
+  const onClickSaveContent = (id: number, type: string) => {
+    const isIdInList = saveContent.includes(id);
+
+    if (!isIdInList) {
+      const updatedContent = [...saveContent, { id, type }];
+      setSaveContent(updatedContent);
+    } else {
+      alert('이미 보관 중인 데이터 입니당!');
+    }
+  };
+
+  const onClickDeleteContent = (id: number) => {
+    // 현재 Recoil 상태 값 가져오기
+    const currentContent = [...saveContent];
+
+    // 제거할 ID가 배열에 있는지 확인
+    const indexToRemove = currentContent.findIndex((item) => item.id === id);
+
+    if (indexToRemove !== -1) {
+      // 배열에서 해당 ID 제거
+      currentContent.splice(indexToRemove, 1);
+
+      // Recoil 상태 업데이트
+      setSaveContent(currentContent);
+
+      // console.log('ID가 제거된 후의 데이터', currentContent);
+    } else {
+      console.log('해당 ID가 Recoil 상태에 없습니다.');
+    }
+  };
+
   let grade = modalList?.vote_average;
   grade = Math.round(grade * 10) / 10;
-
 
   const truncatedText = modalList?.overview.length > 150 ? `${modalList?.overview.slice(0, 150)}...` : modalList?.overview;
 
   if (isLoading) {
     return <Spinner />;
   }
-
 
   return (
     <>
@@ -68,7 +112,7 @@ export const Modal = () => {
           ) : (
             <ModalCard animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
               <CardWrapper>
-                <CloseBtn fill="#FFF" />
+                <CloseBtn fill="#FFF" onClick={onCloseModal} />
                 <ModalImgArea bg={BackGroundImg}>
                   <Poster src={BackGroundposter} />
                 </ModalImgArea>
@@ -85,6 +129,19 @@ export const Modal = () => {
 
                   <Title>
                     <h2>{type === 'movie' ? `${modalList?.title}` : `${modalList?.name}`}</h2>
+                    {isSaveList ? (
+                      <GoCheckCircle
+                        onClick={() => {
+                          onClickDeleteContent(modalList?.id);
+                        }}
+                      />
+                    ) : (
+                      <GoPlusCircle
+                        onClick={() => {
+                          onClickSaveContent(modalList?.id, type);
+                        }}
+                      />
+                    )}
                   </Title>
 
                   <DateAndVoteAverage>
@@ -211,6 +268,13 @@ const Title = styled.div`
   color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.FlexRow};
   align-items: center;
+  gap: 0 30px;
+  svg {
+    font-size: 30px;
+    ${({ theme }) => theme.BoxCenter};
+    cursor: pointer;
+    padding-bottom: 2.5px;
+  }
 `;
 
 const DateAndVoteAverage = styled.div`

@@ -25,7 +25,5 @@ export const Layout = () => {
 };
 const LayoutContiner = styled.div`
   width: 100vw;
-  background-color: black;
-  /* background-color: #333; */
   color: ${({ theme }) => theme.color};
 `;

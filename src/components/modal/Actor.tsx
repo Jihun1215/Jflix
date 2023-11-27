@@ -25,7 +25,7 @@ export const Actor = () => {
     isLoading: caseLoading,
     // isError: DetailError,
   } = useQuery(['contentCase', type, 'id'], () => getContentCase(type, modalInData?.id));
-  console.log('배우데이터', caseList);
+
   if (caseLoading) {
     return <Spinner />;
   }

@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 import { IContent } from 'type/type';
 
 export const testState = atom<boolean>({
@@ -40,3 +41,15 @@ export const SearchTvPageState = atom<number>({
   key: 'searchTvpage',
   default: 1,
 });
+const { persistAtom } = recoilPersist({
+  key: 'movielistMovie',
+  storage: localStorage,
+});
+
+
+export const MyListContentState = atom({
+  key: 'contentId',
+  default: [],
+  effects_UNSTABLE: [persistAtom],
+});
+
