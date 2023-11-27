@@ -8,11 +8,6 @@ const axiosInstance = axios.create({
   params: { api_key: ApiKey, language: 'ko-KR', region: 'KR' },
 });
 
-// const axiosSearchInstance = axios.create({
-//   baseURL: 'https://api.themoviedb.org/3/',
-//   params: { api_key: ApiKey, language: 'ko-KR', region: 'KR' },
-// });
-
 // 이미지를 가져올떄 사용하는 함수
 export const getImgPath = (url?: string) => {
   return `https://image.tmdb.org/t/p/original/${url}`;
@@ -34,18 +29,18 @@ export const getContentCase = async (type: string, id: number | undefined) => {
   return response.data;
 };
 
-export const getSerchContent = async (query: string | null) => {
+export const getSerchContent = async (page: number, query: string | null) => {
   // console.log(query);
-  const params = { api_key: ApiKey, language: 'ko-KR', region: 'KR', query };
+  const params = { api_key: ApiKey, page, language: 'ko-KR', region: 'KR', query };
 
   const response = await axios.get(`${URL}/search/movie`, { params });
   // console.log(response);
   return response.data;
 };
 
-export const getSerchtvContent = async (query: string | null) => {
+export const getSerchtvContent = async (page: number, query: string | null) => {
   // console.log(query);
-  const params = { api_key: ApiKey, language: 'ko-KR', region: 'KR', query };
+  const params = { api_key: ApiKey, page: page, language: 'ko-KR', region: 'KR', query };
 
   const response = await axios.get(`${URL}/search/tv`, { params });
   // console.log(response);

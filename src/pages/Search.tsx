@@ -2,41 +2,24 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRecoilState } from 'recoil';
+import { SearchMoviePageState, SearchTvPageState } from 'state/atoms';
+
+import { Spinner } from 'components';
 
 import { useQuery } from 'react-query';
 import { getSerchContent, getSerchtvContent } from 'utils/api';
 
 import { GrLinkPrevious } from 'react-icons/gr';
 
-// interface ISearchContent {
-//   adult: boolean;
-//   backdrop_path: string;
-//   genre_ids: string[];
-//   id: number;
-//   original_language: string;
-//   original_title: string;
-//   overview: string;
-//   popularity: number;
-//   poster_path: string;
-//   release_date: string;
-//   title: string;
-//   video: boolean;
-//   vote_average: number;
-//   vote_count: number;
-// }
+import { SearchMovieContent, SearchTvContent } from 'components/Content';
 
 export const Search = () => {
-  // const tabs = [{ type: 'movie' }, { type: 'tv' }];
-  // const { section } = useParams();
-  // console.log(section);
   const [selectedTab, setSelectedTab] = useState<string>('movie');
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
-
-  console.log(query);
 
   const onClickGoBack = () => {
     navigate(-1);
@@ -47,8 +30,11 @@ export const Search = () => {
     // navigate(`/search/${section}?q=${keyword}`);
   };
 
-  const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(query));
-  const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(query));
+  const [moviePage, setMoviePage] = useRecoilState(SearchMoviePageState);
+  const [tvPage, setTvPage] = useRecoilState(SearchTvPageState);
+
+  const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(moviePage, query));
+  const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(tvPage, query));
 
   console.log(movielist?.results);
   console.log(tvlist?.results);
@@ -56,7 +42,7 @@ export const Search = () => {
   const Loading = movieLodaing || tvLoading;
 
   if (Loading) {
-    return <div>2</div>;
+    return <Spinner />;
   }
 
   return (
@@ -70,14 +56,19 @@ export const Search = () => {
           <P>의 관련된 검색 결과</P>
         </SearchWord>
       </TitleAndGoback>
+
       <Tabnav>
-        <Tab isActive={selectedTab === 'movie'} onClick={() => onClickTab('movie')}>
+        <Tab isactive={selectedTab === 'movie'} onClick={() => onClickTab('movie')}>
           영화
         </Tab>
-        <Tab isActive={selectedTab === 'tv'} onClick={() => onClickTab('tv')}>
+        <Tab isactive={selectedTab === 'tv'} onClick={() => onClickTab('tv')}>
           티비
         </Tab>
       </Tabnav>
+
+      <SearchContentArea>
+        {selectedTab === 'movie' ? <SearchMovieContent data={movielist} /> : <SearchTvContent data={tvlist} />}
+      </SearchContentArea>
     </Container>
   );
 };
@@ -123,6 +114,7 @@ const SearchWord = styled.div`
   height: 100%;
   ${({ theme }) => theme.FlexRow};
   align-items: center;
+  padding-right: 10%;
   gap: 0 5px;
   justify-content: center;
 `;
@@ -142,11 +134,10 @@ const P = styled.p`
 const Tabnav = styled.nav`
   width: 100%;
   height: 50px;
-  padding-top: 50px;
   ${({ theme }) => theme.BoxCenter};
 `;
 
-const Tab = styled.p<{ isActive: boolean }>`
+const Tab = styled.p<{ isactive: boolean }>`
   width: 150px;
   height: 50px;
   ${({ theme }) => theme.BoxCenter};
@@ -155,6 +146,75 @@ const Tab = styled.p<{ isActive: boolean }>`
   padding-bottom: 3px;
   cursor: pointer;
   transition: 0.2s;
-  color: ${(props) => (props.isActive ? '#E51013' : '#FFFFFF')};
-  border-bottom: ${(props) => props.isActive && '3px solid #E51013'};
+  color: ${(props) => (props.isactive ? '#E51013' : '#FFFFFF')};
+  border-bottom: ${(props) => props.isactive && '3px solid #E51013'};
 `;
+
+const SearchContentArea = styled.div`
+  width: 100%;
+  padding-top: 50px;
+`;
+
+// const Contents = styled.div`
+//   position: relative;
+//   width: 100%;
+//   display: grid;
+//   grid-template-columns: repeat(4, 1fr);
+//   column-gap: 20px;
+//   row-gap: 40px;
+//   color: ${({ theme }) => theme.colors.white};
+//   @media (max-width: 479px) {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+// `;
+
+// const Content = styled.div`
+//   width: 200px;
+//   height: 300px;
+//   border: 1px solid red;
+//   ${({ theme }) => theme.FlexCol};
+//   align-items: center;
+//   justify-content: center;
+// `;
+
+// const Poster = styled.img`
+//   width: 100%;
+//   height: 200px;
+// `;
+
+// const Info = styled.div`
+//   width: 100%;
+//   height: 100px;
+//   ${({ theme }) => theme.FlexCol};
+//   align-items: center;
+//   padding-top: 5px;
+//   gap: 0 10px;
+// `;
+
+// const Title = styled.h2`
+//   height: 30px;
+//   ${({ theme }) => theme.BoxCenter};
+//   font-size: 16px;
+//   font-weight: 700;
+//   text-align: center;
+// `;
+
+// const Date = styled.p`
+//   height: 20px;
+//   ${({ theme }) => theme.BoxCenter};
+//   font-size: 15px;
+//   font-weight: 600;
+//   span {
+//     color: ${({ theme }) => theme.colors.greey};
+//   }
+// `;
+
+// const Vote = styled.p`
+//   height: 20px;
+//   ${({ theme }) => theme.BoxCenter};
+//   font-size: 15px;
+//   font-weight: 600;
+//   span {
+//     color: ${({ theme }) => theme.colors.yellow};
+//   }
+// `;

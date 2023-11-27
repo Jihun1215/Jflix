@@ -30,3 +30,13 @@ export const windowWidthState = atom({
   key: 'windowWidth',
   default: window.innerWidth,
 });
+
+export const SearchMoviePageState = atom<number>({
+  key: 'searchmoviepage',
+  default: 1,
+});
+
+export const SearchTvPageState = atom<number>({
+  key: 'searchTvpage',
+  default: 1,
+});
