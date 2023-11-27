@@ -30,8 +30,8 @@ export const Search = () => {
     // navigate(`/search/${section}?q=${keyword}`);
   };
 
-  const [moviePage, setMoviePage] = useRecoilState(SearchMoviePageState);
-  const [tvPage, setTvPage] = useRecoilState(SearchTvPageState);
+  const [moviePage] = useRecoilState(SearchMoviePageState);
+  const [tvPage] = useRecoilState(SearchTvPageState);
 
   const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(moviePage, query));
   const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(tvPage, query));

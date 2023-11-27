@@ -6,14 +6,8 @@ export interface IGenre {
 export interface ICast {
   adult: false;
   character: string;
-  // credit_id: string;
-  // gender: number;
-  // id: number;
-  // known_for_department: string;
   name: string;
-  // order: number;
   original_name: string;
-  // popularity: number;
   profile_path: string;
 }
 
@@ -70,43 +64,8 @@ export interface ISearchContent {
   first_air_date: string;
 }
 
-export interface ITodayBestMovie {
-  // 19이상
-  adult: boolean;
-  backdrop_path: string;
-  // 장르
-  genre_ids: string[];
-  id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  // 평점
-  vote_average: number;
-  // 투표수
-  vote_count: number;
-}
 
-export interface ITodayMoive {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: string[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: string;
-}
+
 
 export interface IContent {
   // common

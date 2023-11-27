@@ -36,7 +36,7 @@ export const Modal = () => {
     const element = e.target as HTMLElement;
     const TagName = element.tagName;
     e.stopPropagation();
-    console.log(TagName);
+    // console.log(TagName);
     if (TagName === 'SECTION') {
       setISModalOpen(false);
       setModalInData(undefined);
