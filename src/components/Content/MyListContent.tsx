@@ -1,14 +1,19 @@
 import styled from 'styled-components';
 import { getImgPath } from 'utils/api';
 
-import { IContent } from 'type/type';
+import { IModalContent } from 'type/type';
 
 import noimg from 'assets/noimg.png';
 
-export const MyListContent = ({ data }: IContent) => {
+interface IMyList {
+  poster_path?: string;
+  title: string;
+}
+
+export const MyListContent = ({ data }: { data: IModalContent[] }) => {
   return (
     <Lists>
-      {data?.map((data: IContent, index: number) => {
+      {data?.map((data: IMyList, index: number) => {
         return (
           <Content key={index}>
             <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
@@ -41,7 +46,6 @@ const Content = styled.div`
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   justify-content: center;
-  border: 1px solid red;
 `;
 
 const Poster = styled.img`

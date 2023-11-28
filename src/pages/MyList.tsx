@@ -37,7 +37,7 @@ export const MyList = () => {
   const myMovieQueries = useQueries(
     movieList.map((data) => ({
       queryKey: ['myMovie', data.id], // 수정된 부분
-      queryFn: () => getModalContentData('movie', String(data.id)),
+      queryFn: () => getModalContentData('movie', data.id),
     }))
   );
 
@@ -45,15 +45,14 @@ export const MyList = () => {
   const myTvQueries = useQueries(
     tvList.map((data) => ({
       queryKey: ['myMovie', data.id], // 수정된 부분
-      queryFn: () => getModalContentData('movie', String(data.id)),
+      queryFn: () => getModalContentData('movie', data.id),
     }))
   );
 
   const myMovieData = myMovieQueries?.map((myMovie) => myMovie.data);
-  console.log('Mylist 상데 데이터', myMovieData);
+  // console.log('Mylist 상데 데이터', myMovieData);
   const myTvData = myTvQueries?.map((myTv) => myTv.data);
-  // console.log('MyTv 상데 데이터', myMovieData?.length);
-  console.log('MyTv 상데 데이터', myTvData);
+  // console.log('MyTv 상데 데이터', myTvData);
 
   const isMyMovieLoading = myMovieQueries.some((myMovie) => myMovie.isLoading);
   const isMyTvLoading = myTvQueries.some((myTv) => myTv.isLoading);
