@@ -26,18 +26,19 @@ export const Modal = () => {
 
   const [isModalOpen, setISModalOpen] = useRecoilState(modalIsOpenState);
 
-  // const [modalInData, setModalInData] = useRecoilState(ModalContentData);
-
   const [modalTypeAndId, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
-  // console.log(modalTypeAndId?.type);
-  const {
-    data: modalList,
-    isLoading: DetailLoading,
-    // isError: DetailError,
-  } = useQuery(['modalData', modalTypeAndId?.type, 'id'], () => getModalContentData(modalTypeAndId?.type, modalTypeAndId?.id));
+  const { data: modalList, isLoading: DetailLoading } = useQuery(['modalData', modalTypeAndId?.type, 'id'], () => {
+    if (modalTypeAndId?.type && modalTypeAndId?.id) {
+      return getModalContentData(modalTypeAndId.type, modalTypeAndId.id);
+    }
+    // modalTypeAndId값이 없을 시 에러 코드 반환
+    return Promise.reject(new Error('Invalid type or id'));
+  });
 
-  console.log('모달데이터', modalList);
+  // const { data: modalList, isLoading: DetailLoading } = useQuery(['modalData', modalTypeAndId?.type, 'id'], () =>
+  //   getModalContentData(modalTypeAndId?.type, modalTypeAndId?.id)
+  // );
 
   const onClickCloseModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const element = e.target as HTMLElement;
@@ -46,12 +47,12 @@ export const Modal = () => {
     // console.log(TagName);
     if (TagName === 'SECTION') {
       setISModalOpen(false);
-      setModalTypeAndId(null);
+      setModalTypeAndId(undefined);
     }
   };
   const onCloseModal = () => {
     setISModalOpen(false);
-    setModalTypeAndId(null);
+    setModalTypeAndId(undefined);
   };
 
   const BackGroundImg = getImgPath(modalList?.backdrop_path);

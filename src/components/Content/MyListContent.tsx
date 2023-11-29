@@ -12,6 +12,7 @@ interface IMyList {
   poster_path?: string;
   title: string;
   id: number;
+  name?: string;
 }
 
 export const MyListContent = ({ data, type }: { data: IModalContent[]; type: string }) => {
@@ -30,9 +31,7 @@ export const MyListContent = ({ data, type }: { data: IModalContent[]; type: str
         return (
           <Content key={index} onClick={() => onClickModalOpen(data.id)}>
             <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
-            <Info>
-              <Name>{data?.title}</Name>
-            </Info>
+            <Info>{type === 'movie' ? <Name>{data?.title}</Name> : <Name>{data?.name}</Name>}</Info>
           </Content>
         );
       })}
@@ -54,8 +53,8 @@ const Lists = styled.div`
 `;
 
 const Content = styled.div`
-  width: 150px;
-  height: 200px;
+  width: 200px;
+  height: 300px;
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   justify-content: center;
@@ -64,7 +63,7 @@ const Content = styled.div`
 
 const Poster = styled.img`
   width: 100%;
-  height: 140px;
+  height: 240px;
   border-radius: 4px;
   background-image: cover;
 `;

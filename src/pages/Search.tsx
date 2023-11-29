@@ -36,9 +36,6 @@ export const Search = () => {
   const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(moviePage, query));
   const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(tvPage, query));
 
-  // console.log(movielist?.results);
-  // console.log(tvlist?.results);
-
   const Loading = movieLodaing || tvLoading;
 
   if (Loading) {

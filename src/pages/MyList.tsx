@@ -50,9 +50,7 @@ export const MyList = () => {
   );
 
   const myMovieData = myMovieQueries?.map((myMovie) => myMovie.data);
-  console.log('Mylist 상데 데이터', myMovieData.length);
   const myTvData = myTvQueries?.map((myTv) => myTv.data);
-  console.log('MyTv 상데 데이터', myTvData);
 
   const isMyMovieLoading = myMovieQueries.some((myMovie) => myMovie.isLoading);
   const isMyTvLoading = myTvQueries.some((myTv) => myTv.isLoading);

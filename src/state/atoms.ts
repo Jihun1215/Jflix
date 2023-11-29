@@ -37,9 +37,9 @@ export const SearchTvPageState = atom<number>({
   default: 1,
 });
 
-export const ModalTypeAndId = atom<IModal | null>({
+export const ModalTypeAndId = atom<IModal | undefined>({
   key: 'ModalTypeAndId',
-  default: null,
+  default: undefined,
 });
 
 const { persistAtom } = recoilPersist({
