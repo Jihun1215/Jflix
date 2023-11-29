@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState } from 'state/atoms';
+import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import { IContent } from 'type/type';
-
-import { Spinner } from './Spinner';
 
 interface BannerProps {
   type: string;
@@ -16,14 +14,12 @@ import { getImgPath } from 'utils/api';
 
 import Logo from 'assets/svg/netflixlogo.svg?react';
 import { FiInfo } from 'react-icons/fi';
-
-import { ModalContentData } from 'state/atoms';
+import { Spinner } from './Spinner';
 
 export const Banner = ({ type, contents, ranking }: BannerProps) => {
-  const [, setIsmodalOpen] = useRecoilState(modalIsOpenState);
+  const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
 
-  const [, setModalInData] = useRecoilState(ModalContentData);
-  // console.log(contents);
+  const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
   if (contents === undefined) {
     return <Spinner />;
   }
@@ -32,9 +28,10 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
 
   const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 150)}...` : contents?.overview;
 
-  const onClickModalOpen = () => {
-    setIsmodalOpen(true);
-    setModalInData(contents);
+  const onClickModalOpen = (id: number) => {
+    const modalInfo = { type, id };
+    setIsModalOpen(true);
+    setModalTypeAndId(modalInfo);
   };
 
   return (
@@ -53,7 +50,7 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
             <DetailArea>
               <button
                 onClick={() => {
-                  onClickModalOpen();
+                  onClickModalOpen(contents?.id);
                 }}
               >
                 <FiInfo />

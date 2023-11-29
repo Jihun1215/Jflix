@@ -1,19 +1,13 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalContentData } from 'state/atoms';
+import { modalIsOpenState } from 'state/atoms';
 
 import { Header } from './Header';
 import { Modal } from 'components';
-import { useEffect } from 'react';
 
 export const Layout = () => {
   const [isModalOpen] = useRecoilState(modalIsOpenState);
-  const [data] = useRecoilState(ModalContentData);
-
-  useEffect(() => {
-    // console.log('Modal_Data', data);
-  }, [data]);
 
   return (
     <LayoutContiner>

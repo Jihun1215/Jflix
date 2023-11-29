@@ -27,7 +27,7 @@ export const Search = () => {
 
   const onClickTab = (section: string) => {
     setSelectedTab(section);
-    // navigate(`/search/${section}?q=${keyword}`);
+    navigate(`/search/${section}?q=${query}`);
   };
 
   const [moviePage] = useRecoilState(SearchMoviePageState);
@@ -36,8 +36,8 @@ export const Search = () => {
   const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(moviePage, query));
   const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(tvPage, query));
 
-  console.log(movielist?.results);
-  console.log(tvlist?.results);
+  // console.log(movielist?.results);
+  // console.log(tvlist?.results);
 
   const Loading = movieLodaing || tvLoading;
 
@@ -67,7 +67,7 @@ export const Search = () => {
       </Tabnav>
 
       <SearchContentArea>
-        {selectedTab === 'movie' ? <SearchMovieContent data={movielist} /> : <SearchTvContent data={tvlist} />}
+        {selectedTab === 'movie' ? <SearchMovieContent data={movielist} type={'movie'} /> : <SearchTvContent data={tvlist} type={'tv'} />}
       </SearchContentArea>
     </Container>
   );
@@ -132,6 +132,7 @@ const P = styled.p`
 `;
 
 const Tabnav = styled.nav`
+  padding-top: 50px;
   width: 100%;
   height: 50px;
   ${({ theme }) => theme.BoxCenter};

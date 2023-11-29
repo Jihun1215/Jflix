@@ -1,6 +1,9 @@
 import styled from 'styled-components';
-import { getImgPath } from 'utils/api';
 
+import { useRecoilState } from 'recoil';
+import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
+
+import { getImgPath } from 'utils/api';
 import { ISearchContent } from 'type/type';
 
 interface ISearcch {
@@ -8,14 +11,28 @@ interface ISearcch {
   results: ISearchContent[];
 }
 
-export const SearchTvContent = ({  data }: { data: ISearcch }) => {
+export const SearchTvContent = ({ data, type }: { data: ISearcch; type: string }) => {
   const dataArr = data?.results;
+
+  const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
+  const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
+
+  const onClickModalOpen = (id: number) => {
+    const modalInfo = { type, id };
+    setIsModalOpen(true);
+    setModalTypeAndId(modalInfo);
+  };
 
   return (
     <ContentArea>
       {dataArr.map((data: ISearchContent, index: number) => {
         return (
-          <Content key={index}>
+          <Content
+            key={index}
+            onClick={() => {
+              onClickModalOpen(data?.id);
+            }}
+          >
             <Poster src={getImgPath(data.poster_path)} />
             <Info>
               <Title>{data.name}</Title>
@@ -53,6 +70,7 @@ const Content = styled.div`
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const Poster = styled.img`

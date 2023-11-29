@@ -44,15 +44,15 @@ export const MyList = () => {
   // data 불러오기
   const myTvQueries = useQueries(
     tvList.map((data) => ({
-      queryKey: ['myMovie', data.id], // 수정된 부분
-      queryFn: () => getModalContentData('movie', data.id),
+      queryKey: ['mytv', data.id],
+      queryFn: () => getModalContentData('tv', data.id),
     }))
   );
 
   const myMovieData = myMovieQueries?.map((myMovie) => myMovie.data);
-  // console.log('Mylist 상데 데이터', myMovieData);
+  console.log('Mylist 상데 데이터', myMovieData.length);
   const myTvData = myTvQueries?.map((myTv) => myTv.data);
-  // console.log('MyTv 상데 데이터', myTvData);
+  console.log('MyTv 상데 데이터', myTvData);
 
   const isMyMovieLoading = myMovieQueries.some((myMovie) => myMovie.isLoading);
   const isMyTvLoading = myTvQueries.some((myTv) => myTv.isLoading);
@@ -69,8 +69,8 @@ export const MyList = () => {
         <h1>내가 찜한 리스트</h1>
       </Title>
       <MyListCard>
-        <Lists>{myMovieData?.length === 0 ? <p>찜된 영화가 없습니다.</p> : <MyListContent data={myMovieData} />}</Lists>
-        <Lists>{myTvData?.length === 0 ? <p>찜된 tv가 없습니다.</p> : <MyListContent data={myTvData} />}</Lists>
+        <Lists>{myMovieData?.length === 0 ? <p>찜된 영화가 없습니다.</p> : <MyListContent data={myMovieData} type="movie" />}</Lists>
+        <Lists>{myTvData?.length === 0 ? <p>찜된 tv가 없습니다.</p> : <MyListContent data={myTvData} type="tv" />}</Lists>
       </MyListCard>
     </Container>
   );

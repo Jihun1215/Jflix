@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
-// import { useNavigate } from 'react-router-dom';
+
+import { useLocation } from 'react-router-dom';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalContentData } from 'state/atoms';
+import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -59,10 +60,12 @@ const sliderVariants = {
   }),
 };
 
-export const Slider = ({  contents, title }: SliderProps) => {
+export const Slider = ({ contents, title }: SliderProps) => {
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
-  const [, setModalInData] = useRecoilState(ModalContentData);
+  const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
+  const location = useLocation();
+  const type = location.pathname === '/' ? 'movie' : 'tv';
 
   // Slider layout
   const windowWidth = useDebouncedResize();
@@ -75,7 +78,6 @@ export const Slider = ({  contents, title }: SliderProps) => {
     else return 6;
   };
 
-  // Slider List
   // view에 보이는 슬라이더 영화이미지 갯수
   const offset = getSliderOffSet(windowWidth);
 
@@ -104,9 +106,7 @@ export const Slider = ({  contents, title }: SliderProps) => {
 
   const onClickNextBtn = () => {
     if (contents) {
-      // console.log('increase 문 진입');
       if (moving) return;
-      // console.log('increase 누름');
       setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
       setMoving(true);
       setIsPrevBtnDisabled(false);
@@ -118,11 +118,10 @@ export const Slider = ({  contents, title }: SliderProps) => {
     setMovingBack(false);
   };
 
-
-
-  const onClickModalOpen = (data: IContent) => {
+  const onClickModalOpen = (id: number) => {
+    const modalInfo = { type, id };
     setIsModalOpen(true);
-    setModalInData(data);
+    setModalTypeAndId(modalInfo);
   };
 
   return (
@@ -152,7 +151,7 @@ export const Slider = ({  contents, title }: SliderProps) => {
                   bg={getImgPath(data.backdrop_path)}
                   idx={idx}
                   offset={offset}
-                  onClick={() => onClickModalOpen(data)}
+                  onClick={() => onClickModalOpen(data?.id)}
                   variants={cardVariants}
                   whileHover="hover"
                 >

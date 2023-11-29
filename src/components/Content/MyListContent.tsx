@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { getImgPath } from 'utils/api';
 
+import { useRecoilState } from 'recoil';
+import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
+
 import { IModalContent } from 'type/type';
 
 import noimg from 'assets/noimg.png';
@@ -8,14 +11,24 @@ import noimg from 'assets/noimg.png';
 interface IMyList {
   poster_path?: string;
   title: string;
+  id: number;
 }
 
-export const MyListContent = ({ data }: { data: IModalContent[] }) => {
+export const MyListContent = ({ data, type }: { data: IModalContent[]; type: string }) => {
+  const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
+  const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
+
+  const onClickModalOpen = (id: number) => {
+    const modalInfo = { type, id };
+    setIsModalOpen(true);
+    setModalTypeAndId(modalInfo);
+  };
+
   return (
     <Lists>
       {data?.map((data: IMyList, index: number) => {
         return (
-          <Content key={index}>
+          <Content key={index} onClick={() => onClickModalOpen(data.id)}>
             <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
             <Info>
               <Name>{data?.title}</Name>
@@ -46,11 +59,13 @@ const Content = styled.div`
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const Poster = styled.img`
   width: 100%;
   height: 140px;
+  border-radius: 4px;
   background-image: cover;
 `;
 

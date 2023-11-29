@@ -1,9 +1,6 @@
 import styled from 'styled-components';
-
-import { useLocation } from 'react-router-dom';
-
 import { useRecoilState } from 'recoil';
-import { ModalContentData } from 'state/atoms';
+import { ModalTypeAndId } from 'state/atoms';
 
 import { useQuery } from 'react-query';
 import { getContentCase, getImgPath } from 'utils/api';
@@ -15,16 +12,16 @@ import { ICast } from 'type/type';
 import DefaultProfile from 'assets/defaultProfile.png';
 
 export const Actor = () => {
-  const location = useLocation();
+  const [modalTypeAndId] = useRecoilState(ModalTypeAndId);
+  console.log(modalTypeAndId);
 
-  const type = location.pathname === '/' ? 'movie' : 'tv';
-  const [modalInData] = useRecoilState(ModalContentData);
+  const type = modalTypeAndId?.type;
 
   const {
     data: caseList,
     isLoading: caseLoading,
     // isError: DetailError,
-  } = useQuery(['contentCase', type, 'id'], () => getContentCase(type, modalInData?.id));
+  } = useQuery(['contentCase', type, 'id'], () => getContentCase(type, modalTypeAndId?.id));
 
   if (caseLoading) {
     return <Spinner />;
@@ -51,7 +48,7 @@ export const Actor = () => {
 };
 
 const Contianer = styled.div`
-  width: 100%;
+  width: 90%;
   height: 350px;
   padding: 10px;
 `;

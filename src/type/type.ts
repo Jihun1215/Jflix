@@ -1,3 +1,8 @@
+export interface IModal {
+  type: string;
+  id: number;
+}
+
 export interface IGenre {
   id: number;
   name: string;
@@ -12,36 +17,29 @@ export interface ICast {
 }
 
 export interface IModalContent {
-  // 19이상
   adult: boolean;
   backdrop_path: string;
   belongs_to_collection: null;
   budget: number;
-  // 장르
   genres: IGenre[];
   homepage: string;
-  id: string;
+  id: number;
   original_language: string;
   original_title: string;
   overview: string;
   popularity: number;
   production_companies: Icompanies[];
   production_countries: ICountries[];
-
   poster_path: string;
   release_date: string;
-
   revenue: number;
   runtime: number;
   spoken_languages: IspokenLanguages[];
   status: string;
   tagline: string;
-
   title: string;
   video: boolean;
-  // 평점
   vote_average: number;
-  // 투표수
   vote_count: number;
 }
 
@@ -63,7 +61,6 @@ export interface ISearchContent {
   name: string;
   first_air_date: string;
 }
-
 
 export interface IContent {
   // common

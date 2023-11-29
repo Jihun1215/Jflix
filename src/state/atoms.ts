@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { IContent } from 'type/type';
+import { IModal } from 'type/type';
 
 export const testState = atom<boolean>({
   key: 'testState',
@@ -14,11 +14,6 @@ export const modalIsOpenState = atom<boolean>({
 
 export const DetailContentId = atom<number | undefined>({
   key: 'DetailContentId',
-  default: undefined,
-});
-
-export const ModalContentData = atom<IContent | undefined>({
-  key: 'ModalContentData',
   default: undefined,
 });
 
@@ -41,15 +36,19 @@ export const SearchTvPageState = atom<number>({
   key: 'searchTvpage',
   default: 1,
 });
+
+export const ModalTypeAndId = atom<IModal | null>({
+  key: 'ModalTypeAndId',
+  default: null,
+});
+
 const { persistAtom } = recoilPersist({
   key: 'movielistMovie',
   storage: localStorage,
 });
-
 
 export const MyListContentState = atom({
   key: 'contentId',
   default: [],
   effects_UNSTABLE: [persistAtom],
 });
-

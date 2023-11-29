@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalContentData, MyListContentState } from 'state/atoms';
+import { modalIsOpenState, MyListContentState, ModalTypeAndId } from 'state/atoms';
 
 import { motion } from 'framer-motion';
 
@@ -22,15 +22,22 @@ export const Modal = () => {
   const location = useLocation();
 
   const type = location.pathname === '/' ? 'movie' : 'tv';
+  console.log(type);
+
   const [isModalOpen, setISModalOpen] = useRecoilState(modalIsOpenState);
 
-  const [modalInData, setModalInData] = useRecoilState(ModalContentData);
+  // const [modalInData, setModalInData] = useRecoilState(ModalContentData);
 
+  const [modalTypeAndId, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
+
+  // console.log(modalTypeAndId?.type);
   const {
     data: modalList,
     isLoading: DetailLoading,
     // isError: DetailError,
-  } = useQuery(['popularMovie', type, 'id'], () => getModalContentData(type, modalInData?.id));
+  } = useQuery(['modalData', modalTypeAndId?.type, 'id'], () => getModalContentData(modalTypeAndId?.type, modalTypeAndId?.id));
+
+  console.log('모달데이터', modalList);
 
   const onClickCloseModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const element = e.target as HTMLElement;
@@ -39,16 +46,16 @@ export const Modal = () => {
     // console.log(TagName);
     if (TagName === 'SECTION') {
       setISModalOpen(false);
-      setModalInData(undefined);
+      setModalTypeAndId(null);
     }
   };
   const onCloseModal = () => {
     setISModalOpen(false);
-    setModalInData(undefined);
+    setModalTypeAndId(null);
   };
 
-  const BackGroundImg = getImgPath(modalInData?.backdrop_path);
-  const BackGroundposter = getImgPath(modalInData?.poster_path);
+  const BackGroundImg = getImgPath(modalList?.backdrop_path);
+  const BackGroundposter = getImgPath(modalList?.poster_path);
 
   const isLoading = DetailLoading;
 
@@ -107,7 +114,7 @@ export const Modal = () => {
     <>
       {isModalOpen && (
         <Container onClick={onClickCloseModal} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-          {modalInData === undefined ? (
+          {modalTypeAndId === undefined ? (
             <Spinner />
           ) : (
             <ModalCard animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
@@ -122,13 +129,13 @@ export const Modal = () => {
                       return <Genres key={index}>{data?.name}</Genres>;
                     })}
                     <span />
-                    {type === 'movie' ? <RuntimeAndSeasons>{modalList?.runtime}분</RuntimeAndSeasons> : null}
-                    {type === 'tv' ? <RuntimeAndSeasons>시즌 {modalList?.seasons.length}</RuntimeAndSeasons> : null}
-                    {type === 'tv' ? <RuntimeAndSeasons>에피소드 {modalList?.number_of_episodes}</RuntimeAndSeasons> : null}
+                    {modalTypeAndId?.type === 'movie' ? <RuntimeAndSeasons>{modalList?.runtime}분</RuntimeAndSeasons> : null}
+                    {modalTypeAndId?.type === 'tv' ? <RuntimeAndSeasons>시즌 {modalList?.seasons.length}</RuntimeAndSeasons> : null}
+                    {modalTypeAndId?.type === 'tv' ? <RuntimeAndSeasons>에피소드 {modalList?.number_of_episodes}</RuntimeAndSeasons> : null}
                   </DataInfoArea>
 
                   <Title>
-                    <h2>{type === 'movie' ? `${modalList?.title}` : `${modalList?.name}`}</h2>
+                    <h2>{modalTypeAndId?.type === 'movie' ? `${modalList?.title}` : `${modalList?.name}`}</h2>
                     {isSaveList ? (
                       <GoCheckCircle
                         onClick={() => {
@@ -146,8 +153,12 @@ export const Modal = () => {
 
                   <DateAndVoteAverage>
                     <Date>
-                      {type === 'movie' ? '개봉일: ' : '첫방영: '}
-                      {type === 'movie' ? <span> {modalList?.release_date}</span> : <span>{modalList?.first_air_date}</span>}
+                      {modalTypeAndId?.type === 'movie' ? '개봉일: ' : '첫방영: '}
+                      {modalTypeAndId?.type === 'movie' ? (
+                        <span> {modalList?.release_date}</span>
+                      ) : (
+                        <span>{modalList?.first_air_date}</span>
+                      )}
                     </Date>
                     <VoteAverage>
                       평점: <span>{grade}</span>
