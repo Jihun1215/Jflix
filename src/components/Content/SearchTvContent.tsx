@@ -11,8 +11,8 @@ interface ISearcch {
   results: ISearchContent[];
 }
 
-export const SearchTvContent = ({ data, type }: { data: ISearcch; type: string }) => {
-  const dataArr = data?.results;
+export const SearchTvContent = ({ lists, type }: { lists: ISearcch; type: string }) => {
+  const dataArr = lists?.results;
 
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);

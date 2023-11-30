@@ -51,10 +51,10 @@ export const Home = () => {
 
   return (
     <Container>
-      <Banner type="movie" contents={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
-      <Slider  contents={nowPlayMovieList?.results} title="개봉중인 영화" />
-      <Slider  contents={topRatedMovieList?.results} title="최고평점 영화" />
-      <Slider  contents={upcomingMovieList?.results} title="개봉예정 영화" />
+      <Banner type="movie" content={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
+      <Slider  lists={nowPlayMovieList?.results} title="개봉중인 영화" />
+      <Slider  lists={topRatedMovieList?.results} title="최고평점 영화" />
+      <Slider  lists={upcomingMovieList?.results} title="개봉예정 영화" />
     </Container>
   );
 };

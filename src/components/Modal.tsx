@@ -65,11 +65,9 @@ export const Modal = () => {
   // mylist code
   const [saveContent, setSaveContent] = useRecoilState(MyListContentState);
 
-  // console.log(saveContent);
 
   const existingItem = saveContent.find((item: { id: number; type: string }) => item.id === modalList?.id);
   const isSaveList = Boolean(existingItem);
-  // console.log(isSaveList);
 
   const onClickSaveContent = (id: number, type: string) => {
     const isIdInList = saveContent.includes(id);
@@ -83,17 +81,12 @@ export const Modal = () => {
   };
 
   const onClickDeleteContent = (id: number) => {
-    // 현재 Recoil 상태 값 가져오기
     const currentContent = [...saveContent];
 
-    // 제거할 ID가 배열에 있는지 확인
     const indexToRemove = currentContent.findIndex((item) => item.id === id);
 
     if (indexToRemove !== -1) {
-      // 배열에서 해당 ID 제거
       currentContent.splice(indexToRemove, 1);
-
-      // Recoil 상태 업데이트
       setSaveContent(currentContent);
 
       // console.log('ID가 제거된 후의 데이터', currentContent);

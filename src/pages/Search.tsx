@@ -64,7 +64,7 @@ export const Search = () => {
       </Tabnav>
 
       <SearchContentArea>
-        {selectedTab === 'movie' ? <SearchMovieContent data={movielist} type={'movie'} /> : <SearchTvContent data={tvlist} type={'tv'} />}
+        {selectedTab === 'movie' ? <SearchMovieContent lists={movielist} type={'movie'} /> : <SearchTvContent lists={tvlist} type={'tv'} />}
       </SearchContentArea>
     </Container>
   );

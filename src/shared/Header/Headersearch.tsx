@@ -1,8 +1,5 @@
-import { useState, useRef, SetStateAction } from 'react';
+import { useState, useRef } from 'react';
 import styled from 'styled-components';
-
-// import { useQuery } from 'react-query';
-// import { getSerchContent } from 'utils/api';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -17,7 +14,7 @@ export const Headersearch = () => {
 
   const [isInput, setIsInput] = useState<boolean>(false);
 
-  const onChangeValue = (e: { target: { value: SetStateAction<string> } }) => {
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearcvalue(e.target.value);
   };
 

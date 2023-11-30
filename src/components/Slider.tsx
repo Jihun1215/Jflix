@@ -21,7 +21,7 @@ interface ISliderVariantsProps {
 }
 
 interface SliderProps {
-  contents: IContent[];
+  lists: IContent[];
   title: string;
 }
 //  Card 컴포넌트 애니메이션
@@ -60,7 +60,7 @@ const sliderVariants = {
   }),
 };
 
-export const Slider = ({ contents, title }: SliderProps) => {
+export const Slider = ({ lists, title }: SliderProps) => {
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
@@ -85,7 +85,7 @@ export const Slider = ({ contents, title }: SliderProps) => {
   const [index, setIndex] = useState(0);
 
   // props 받은 배열의 길이
-  const listLength = contents?.length;
+  const listLength = lists?.length;
 
   // 최대 Slider 할 수있는 Index
   const maxIndex = Math.floor(listLength / offset) - 1;
@@ -96,7 +96,7 @@ export const Slider = ({ contents, title }: SliderProps) => {
   const [movingBack, setMovingBack] = useState(false);
 
   const onClickPrenBtn = () => {
-    if (contents) {
+    if (lists) {
       if (moving) return;
       setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
       setMoving(true);
@@ -105,7 +105,7 @@ export const Slider = ({ contents, title }: SliderProps) => {
   };
 
   const onClickNextBtn = () => {
-    if (contents) {
+    if (lists) {
       if (moving) return;
       setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
       setMoving(true);
@@ -145,7 +145,7 @@ export const Slider = ({ contents, title }: SliderProps) => {
             custom={{ movingBack, windowWidth }}
             offset={offset}
           >
-            {contents?.slice(offset * index, offset * index + offset).map((data, idx) => (
+            {lists?.slice(offset * index, offset * index + offset).map((data, idx) => (
               <Card key={data.id}>
                 <CardPoster
                   bg={getImgPath(data.backdrop_path)}

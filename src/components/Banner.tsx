@@ -6,7 +6,7 @@ import { IContent } from 'type/type';
 
 interface BannerProps {
   type: string;
-  contents?: IContent;
+  content?: IContent;
   ranking: number;
 }
 
@@ -16,17 +16,17 @@ import Logo from 'assets/svg/netflixlogo.svg?react';
 import { FiInfo } from 'react-icons/fi';
 import { Spinner } from './Spinner';
 
-export const Banner = ({ type, contents, ranking }: BannerProps) => {
+export const Banner = ({ type, content, ranking }: BannerProps) => {
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
 
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
-  if (contents === undefined) {
+  if (content === undefined) {
     return <Spinner />;
   }
 
-  const BackGroundImg = getImgPath(contents?.backdrop_path);
+  const BackGroundImg = getImgPath(content?.backdrop_path);
 
-  const truncatedText = contents?.overview.length > 150 ? `${contents?.overview.slice(0, 150)}...` : contents?.overview;
+  const truncatedText = content?.overview.length > 150 ? `${content?.overview.slice(0, 150)}...` : content?.overview;
 
   const onClickModalOpen = (id: number) => {
     const modalInfo = { type, id };
@@ -36,21 +36,21 @@ export const Banner = ({ type, contents, ranking }: BannerProps) => {
 
   return (
     <>
-      {contents && (
+      {content && (
         <Container img={BackGroundImg}>
           <Card>
             <TopText>
               <NetflixLogo />
               {type === 'movie' ? <p>오늘의 {ranking + 1}위 영화</p> : <p>오늘의 {ranking + 1}위 Tv</p>}
             </TopText>
-            <Title>{type === 'movie' ? `${contents?.title}` : `${contents?.name}`}</Title>
+            <Title>{type === 'movie' ? `${content?.title}` : `${content?.name}`}</Title>
             <Overview>
               {type === 'tv' ? <OverviewText>제공된 줄거리가 없습니다.</OverviewText> : <OverviewText>{truncatedText}</OverviewText>}{' '}
             </Overview>
             <DetailArea>
               <button
                 onClick={() => {
-                  onClickModalOpen(contents?.id);
+                  onClickModalOpen(content?.id);
                 }}
               >
                 <FiInfo />

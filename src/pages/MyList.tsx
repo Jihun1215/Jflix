@@ -67,8 +67,8 @@ export const MyList = () => {
         <h1>내가 찜한 리스트</h1>
       </Title>
       <MyListCard>
-        <Lists>{myMovieData?.length === 0 ? <p>찜된 영화가 없습니다.</p> : <MyListContent data={myMovieData} type="movie" />}</Lists>
-        <Lists>{myTvData?.length === 0 ? <p>찜된 tv가 없습니다.</p> : <MyListContent data={myTvData} type="tv" />}</Lists>
+        <Lists>{myMovieData?.length === 0 ? <p>찜된 영화가 없습니다.</p> : <MyListContent lists={myMovieData} type="movie" />}</Lists>
+        <Lists>{myTvData?.length === 0 ? <p>찜된 tv가 없습니다.</p> : <MyListContent lists={myTvData} type="tv" />}</Lists>
       </MyListCard>
     </Container>
   );
@@ -103,12 +103,5 @@ const MyListCard = styled.div`
 const Lists = styled.div`
   width: 100%;
   height: 50%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 20px;
-  row-gap: 40px;
   color: ${({ theme }) => theme.colors.white};
-  @media (max-width: 479px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 `;

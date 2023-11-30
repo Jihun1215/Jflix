@@ -13,15 +13,17 @@ import DefaultProfile from 'assets/defaultProfile.png';
 
 export const Actor = () => {
   const [modalTypeAndId] = useRecoilState(ModalTypeAndId);
-  console.log(modalTypeAndId);
+  // console.log(modalTypeAndId);
 
   const type = modalTypeAndId?.type;
 
-  const {
-    data: caseList,
-    isLoading: caseLoading,
-    // isError: DetailError,
-  } = useQuery(['contentCase', type, 'id'], () => getContentCase(type, modalTypeAndId?.id));
+  const { data: caseList, isLoading: caseLoading } = useQuery(['contentCase', type, 'id'], () => {
+    if (modalTypeAndId?.type && modalTypeAndId?.id) {
+      return getContentCase(modalTypeAndId.type, modalTypeAndId.id);
+    }
+    // modalTypeAndId값이 없을 시 에러 코드 반환
+    return Promise.reject(new Error('Invalid type or id'));
+  });
 
   if (caseLoading) {
     return <Spinner />;
