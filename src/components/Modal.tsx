@@ -22,7 +22,6 @@ export const Modal = () => {
   const location = useLocation();
 
   const type = location.pathname === '/' ? 'movie' : 'tv';
-  console.log(type);
 
   const [isModalOpen, setISModalOpen] = useRecoilState(modalIsOpenState);
 
@@ -44,7 +43,7 @@ export const Modal = () => {
     const element = e.target as HTMLElement;
     const TagName = element.tagName;
     e.stopPropagation();
-    // console.log(TagName);
+
     if (TagName === 'SECTION') {
       setISModalOpen(false);
       setModalTypeAndId(undefined);
@@ -64,7 +63,6 @@ export const Modal = () => {
 
   // mylist code
   const [saveContent, setSaveContent] = useRecoilState(MyListContentState);
-
 
   const existingItem = saveContent.find((item: { id: number; type: string }) => item.id === modalList?.id);
   const isSaveList = Boolean(existingItem);
@@ -88,10 +86,8 @@ export const Modal = () => {
     if (indexToRemove !== -1) {
       currentContent.splice(indexToRemove, 1);
       setSaveContent(currentContent);
-
-      // console.log('ID가 제거된 후의 데이터', currentContent);
     } else {
-      console.log('해당 ID가 Recoil 상태에 없습니다.');
+      alert('해당 ID가 Recoil 상태에 없습니다.');
     }
   };
 

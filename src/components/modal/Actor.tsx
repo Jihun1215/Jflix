@@ -13,7 +13,6 @@ import DefaultProfile from 'assets/defaultProfile.png';
 
 export const Actor = () => {
   const [modalTypeAndId] = useRecoilState(ModalTypeAndId);
-  // console.log(modalTypeAndId);
 
   const type = modalTypeAndId?.type;
 

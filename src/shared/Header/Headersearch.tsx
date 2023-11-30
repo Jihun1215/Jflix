@@ -64,17 +64,20 @@ const Container = styled.div`
   position: fixed;
   inset: 0;
   width: 100vw;
-  z-index: 9999;
+  z-index: 9995;
   background-color: rgba(0, 0, 0, 0.6);
   ${({ theme }) => theme.BoxCenter};
 `;
 
 const SearchArea = styled.form`
   position: relative;
-  width: 200px;
+  width: 175px;
   height: 30px;
   ${({ theme }) => theme.BoxCenter};
-  z-index: 10000;
+  z-index: 9996;
+  @media (max-width: 480px) {
+    width: 175px;
+  }
 `;
 
 const SearchInput = styled.input<{ isinput: string }>`
@@ -95,10 +98,10 @@ const SearchInput = styled.input<{ isinput: string }>`
 
 const SearcIcon = styled(FiSearch)<{ isinput: string }>`
   position: absolute;
-  left: ${(props) => (props.isinput === 'true' ? '15px' : '175px')};
+  left: ${(props) => (props.isinput === 'true' ? '5px' : '160px')};
   cursor: pointer;
   font-size: 20px;
   color: ${({ theme }) => theme.colors.white};
-  z-index: 100;
+  z-index: 1;
   transition: 0.3s;
 `;

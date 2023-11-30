@@ -30,8 +30,6 @@ export const MyList = () => {
     setTvList(filteredTvList);
   }, [mylistcontent]);
 
-  // console.log(movieList);
-  // console.log(tvList);
 
   // data 불러오기
   const myMovieQueries = useQueries(

@@ -20,9 +20,7 @@ export const useDebouncedResize = () => {
 
   useEffect(() => {
     const handleResizeDebounced = debounce(() => {
-      // console.log('resize event handler enter');
       setWindowWidth(window.innerWidth);
-      // console.log('resize event handler leave');
     }, DELAY_MS);
 
     window.addEventListener('resize', handleResizeDebounced);

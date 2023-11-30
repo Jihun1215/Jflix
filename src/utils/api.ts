@@ -30,19 +30,15 @@ export const getContentCase = async (type: string, id: number | undefined) => {
 };
 
 export const getSerchContent = async (page: number, query: string | null) => {
-  // console.log(query);
   const params = { api_key: ApiKey, page, language: 'ko-KR', region: 'KR', query };
 
   const response = await axios.get(`${URL}/search/movie`, { params });
-  // console.log(response);
   return response.data;
 };
 
 export const getSerchtvContent = async (page: number, query: string | null) => {
-  // console.log(query);
   const params = { api_key: ApiKey, page: page, language: 'ko-KR', region: 'KR', query };
 
   const response = await axios.get(`${URL}/search/tv`, { params });
-  // console.log(response);
   return response.data;
 };

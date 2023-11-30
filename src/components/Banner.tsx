@@ -122,7 +122,7 @@ const Title = styled.h1`
 `;
 
 const Overview = styled.div`
-  width: 100vw;
+  width: 800px;
   height: 300px;
   font-size: 16px;
   ${({ theme }) => theme.BoxCenter};
@@ -130,7 +130,6 @@ const Overview = styled.div`
   @media (max-width: 1024px) {
     width: 500px;
   }
-
   @media (max-width: 600px) {
     width: 350px;
   }
