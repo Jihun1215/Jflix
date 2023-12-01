@@ -55,6 +55,7 @@ const Nav = styled.ul`
 const Li = styled.li`
   position: relative;
   cursor: pointer;
+  font-weight: 600;
 `;
 
 const Circle = styled(motion.span)`

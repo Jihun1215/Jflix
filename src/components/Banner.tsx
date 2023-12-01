@@ -4,6 +4,8 @@ import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import { IContent } from 'type/type';
 
+import { toDown } from 'styles/animation';
+
 interface BannerProps {
   type: string;
   content?: IContent;
@@ -68,6 +70,7 @@ const Container = styled.section<{ img: string }>`
   width: 100%;
   height: 80vh;
   padding: 200px 0 0 60px;
+  animation: ${toDown} 0.45s ease-in-out;
   ${({ theme }) => theme.FlexCol};
   justify-content: center;
   background-size: cover;

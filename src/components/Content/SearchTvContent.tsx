@@ -6,6 +6,8 @@ import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 import { getImgPath } from 'utils/api';
 import { ISearchContent } from 'type/type';
 
+import { toUp } from 'styles/animation';
+
 interface ISearcch {
   type: string;
   results: ISearchContent[];
@@ -68,9 +70,9 @@ const Content = styled.div`
   width: 200px;
   height: 300px;
   ${({ theme }) => theme.FlexCol};
-  align-items: center;
-  justify-content: center;
+  ${({ theme }) => theme.FlexCenter};
   cursor: pointer;
+  animation: ${toUp} 0.45s ease-in-out;
 `;
 
 const Poster = styled.img`

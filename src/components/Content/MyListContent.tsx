@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import { IModalContent } from 'type/type';
+import { toLeft } from 'styles/animation';
 
 import noimg from 'assets/noimg.png';
 
@@ -81,6 +82,7 @@ const Content = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  animation: ${toLeft} 0.45s ease-in-out;
   @media (max-width: 440px) {
     width: 150px;
     height: 225px;
