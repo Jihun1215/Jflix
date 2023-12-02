@@ -4,18 +4,16 @@ import { useRecoilState } from 'recoil';
 import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import { getImgPath } from 'utils/api';
-import { ISearchContent } from 'type/type';
+import { IContent } from 'type/type';
 
 import { toUp } from 'styles/animation';
 
-interface ISearcch {
-  type: string;
-  results: ISearchContent[];
-}
+import noimg from 'assets/noimg.png';
 
-export const SearchTvContent = ({ lists, type }: { lists: ISearcch; type: string }) => {
-  const dataArr = lists?.results;
-
+export const SearchTvContent = ({ lists, type }: { lists: IContent[]; type: string }) => {
+  //   console.log(lists);
+  // console.log(lists);
+  // console.log(ref);
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
@@ -25,9 +23,11 @@ export const SearchTvContent = ({ lists, type }: { lists: ISearcch; type: string
     setModalTypeAndId(modalInfo);
   };
 
+  // console.log(scrollContainerRef);
   return (
+    // <InfiniteScroll pageStart={0} loadMore={() => fetchNextPage().then(() => {})} hasMore={hasNextPage} loader={<Spinner />}>
     <ContentArea>
-      {dataArr.map((data: ISearchContent, index: number) => {
+      {lists?.map((data: IContent, index: number) => {
         return (
           <Content
             key={index}
@@ -35,11 +35,11 @@ export const SearchTvContent = ({ lists, type }: { lists: ISearcch; type: string
               onClickModalOpen(data?.id);
             }}
           >
-            <Poster src={getImgPath(data.poster_path)} />
+            <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
             <Info>
-              <Title>{data.name}</Title>
+              <Title>{data.title}</Title>
               <Date>
-                첫방영일: <span>{data.first_air_date}</span>
+                개봉일: <span>{data.release_date}</span>
               </Date>
 
               <Vote>
@@ -50,17 +50,22 @@ export const SearchTvContent = ({ lists, type }: { lists: ISearcch; type: string
         );
       })}
     </ContentArea>
+    // </InfiniteScroll>
   );
 };
 
 const ContentArea = styled.div`
   position: relative;
   width: 100%;
+  max-height: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   column-gap: 20px;
   row-gap: 40px;
   color: ${({ theme }) => theme.colors.white};
+  @media (max-width: 920px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
   @media (max-width: 479px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -85,12 +90,12 @@ const Info = styled.div`
   height: 100px;
   ${({ theme }) => theme.FlexCol};
   align-items: center;
-  padding-top: 5px;
+  padding-top: 15px;
   gap: 0 10px;
 `;
 
 const Title = styled.h2`
-  height: 30px;
+  height: 40px;
   ${({ theme }) => theme.BoxCenter};
   font-size: 16px;
   font-weight: 700;

@@ -2,20 +2,22 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useRecoilState } from 'recoil';
-import { SearchMoviePageState, SearchTvPageState } from 'state/atoms';
+// import { useRecoilState } from 'recoil';
+// import { SearchMoviePageState, SearchTvPageState } from 'state/atoms';
+
+// import { useInfiniteSearchQuery } from 'hooks/useInfiniteSearchQuery';
 
 import { Spinner } from 'components';
 
-import { useQuery } from 'react-query';
-import { getSerchContent, getSerchtvContent } from 'utils/api';
+// import { useQuery } from 'react-query';
+import { getSerachMovieContent, getSerachtvContent } from 'utils/api';
 
 import { GrLinkPrevious } from 'react-icons/gr';
 
 import { SearchMovieContent, SearchTvContent } from 'components/Content';
 
 export const Search = () => {
-  const [selectedTab, setSelectedTab] = useState<string>('movie');
+  const [type, setType] = useState<string>('movie');
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -26,21 +28,22 @@ export const Search = () => {
   };
 
   const onClickTab = (section: string) => {
-    setSelectedTab(section);
+    setType(section);
     navigate(`/search/${section}?q=${query}`);
   };
 
-  const [moviePage] = useRecoilState(SearchMoviePageState);
-  const [tvPage] = useRecoilState(SearchTvPageState);
+  // movie data fetch
+  // const [movieLoading, movietotalCount, filteredMovieSearch] = useInfiniteSearchQuery('movie', query!, getSerachMovieContent);
 
-  const { data: movielist, isLoading: movieLodaing } = useQuery(['getmovieSerch', query], () => getSerchContent(moviePage, query));
-  const { data: tvlist, isLoading: tvLoading } = useQuery(['gettvSerch', query], () => getSerchtvContent(tvPage, query));
+  // const [tvLoading, tvtotalCount, filteredTvSearch] = useInfiniteSearchQuery('tv', query!, getSerachtvContent);
+  // console.log('영화데이터', filteredMovieSearch);
+  // console.log('Tv데이터', filteredTvSearch);
 
-  const Loading = movieLodaing || tvLoading;
+  //  const Loading = movieLoading || tvLoading;
 
-  if (Loading) {
-    return <Spinner />;
-  }
+  //   if (Loading) {
+  //     return  <Spinner />;
+  //   }
 
   return (
     <Container>
@@ -55,16 +58,26 @@ export const Search = () => {
       </TitleAndGoback>
 
       <Tabnav>
-        <Tab isactive={selectedTab === 'movie'} onClick={() => onClickTab('movie')}>
-          영화
+        <Tab isactive={type === 'movie'} onClick={() => onClickTab('movie')}>
+          영화 {/*(<span>{movietotalCount}</span>) */}
         </Tab>
-        <Tab isactive={selectedTab === 'tv'} onClick={() => onClickTab('tv')}>
-          티비
+        <Tab isactive={type === 'tv'} onClick={() => onClickTab('tv')}>
+          티비 {/* (<span>{tvtotalCount}</span>) */}
         </Tab>
       </Tabnav>
 
       <SearchContentArea>
-        {selectedTab === 'movie' ? <SearchMovieContent lists={movielist} type={'movie'} /> : <SearchTvContent lists={tvlist} type={'tv'} />}
+        {type === 'movie' ? <SearchMovieContent type="movie" query={query!} /> : null}
+        {/* {type === 'movie' ? (
+          <SearchMovieContent lists={filteredMovieSearch} type={'movie'} />
+        ) : (
+          <SearchTvContent lists={filteredTvSearch} type={'tv'} />
+        )} */}
+        {/* <SearchContent
+          type={type}
+          lists={type === 'movie' ? filteredMovieSearch : filteredTvSearch}
+          ref={type === 'movie' ? movieRef : tvRef}
+        /> */}
       </SearchContentArea>
     </Container>
   );
@@ -146,6 +159,9 @@ const Tab = styled.p<{ isactive: boolean }>`
   transition: 0.2s;
   color: ${(props) => (props.isactive ? '#E51013' : '#FFFFFF')};
   border-bottom: ${(props) => props.isactive && '3px solid #E51013'};
+  span {
+    font-size: 20px;
+  }
 `;
 
 const SearchContentArea = styled.div`

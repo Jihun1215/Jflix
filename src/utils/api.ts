@@ -29,16 +29,23 @@ export const getContentCase = async (type: string, id: number | undefined) => {
   return response.data;
 };
 
-export const getSerchContent = async (page: number, query: string | null) => {
-  const params = { api_key: ApiKey, page, language: 'ko-KR', region: 'KR', query };
+export const getSerachMovieContent = async (pageParam: number, query: string) => {
+  console.log(pageParam);
+  console.log(query);
+  // console.log(`movie search ${query} ${pageParam} 시작`);
+  const params = { page: pageParam, query };
 
-  const response = await axios.get(`${URL}/search/movie`, { params });
-  return response.data;
+  const response = await axiosInstance.get(`${URL}/search/movie`, { params });
+  // console.log(`movie search ${query} ${pageParam} 끝`);
+  return response;
 };
 
-export const getSerchtvContent = async (page: number, query: string | null) => {
-  const params = { api_key: ApiKey, page: page, language: 'ko-KR', region: 'KR', query };
-
-  const response = await axios.get(`${URL}/search/tv`, { params });
-  return response.data;
+export const getSerachtvContent = async (pageParam: number, query: string) => {
+  console.log(pageParam);
+  console.log(query);
+  // console.log(`movie search ${query} ${pageParam} 시작`);
+  const params = { page: pageParam, query };
+  const response = await axiosInstance.get(`${URL}/search/tv`, { params });
+  // console.log(`movie search ${query} ${pageParam} 끝`);
+  return response;
 };
