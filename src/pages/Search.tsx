@@ -2,15 +2,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// import { useRecoilState } from 'recoil';
-// import { SearchMoviePageState, SearchTvPageState } from 'state/atoms';
-
-// import { useInfiniteSearchQuery } from 'hooks/useInfiniteSearchQuery';
-
-import { Spinner } from 'components';
-
-// import { useQuery } from 'react-query';
-import { getSerachMovieContent, getSerachtvContent } from 'utils/api';
+import { useRecoilValue } from 'recoil';
+import { SearchMovieTotalCount, SearchTvTotalCount } from 'state/atoms';
 
 import { GrLinkPrevious } from 'react-icons/gr';
 
@@ -32,6 +25,13 @@ export const Search = () => {
     navigate(`/search/${section}?q=${query}`);
   };
 
+  const searchMovieCount = useRecoilValue(SearchMovieTotalCount);
+  const searchTvCount = useRecoilValue(SearchTvTotalCount);
+
+  // const tvTotalCount = useRecoilValue(SearchTvContent);
+  // console.log('영화 총 갯수', searchMovieCount);
+  // console.log('tv 총 갯수', searchTvCount);
+
   // movie data fetch
   // const [movieLoading, movietotalCount, filteredMovieSearch] = useInfiniteSearchQuery('movie', query!, getSerachMovieContent);
 
@@ -44,6 +44,8 @@ export const Search = () => {
   //   if (Loading) {
   //     return  <Spinner />;
   //   }
+
+  // 무한스크롤 관련한 데이터 패칭 !
 
   return (
     <Container>
@@ -59,25 +61,17 @@ export const Search = () => {
 
       <Tabnav>
         <Tab isactive={type === 'movie'} onClick={() => onClickTab('movie')}>
-          영화 {/*(<span>{movietotalCount}</span>) */}
+          영화
+          {/* (<span>{searchMovieCount}</span>) */}
         </Tab>
         <Tab isactive={type === 'tv'} onClick={() => onClickTab('tv')}>
-          티비 {/* (<span>{tvtotalCount}</span>) */}
+          티비
+          {/* (<span>{searchTvCount}</span>) */}
         </Tab>
       </Tabnav>
 
       <SearchContentArea>
-        {type === 'movie' ? <SearchMovieContent type="movie" query={query!} /> : null}
-        {/* {type === 'movie' ? (
-          <SearchMovieContent lists={filteredMovieSearch} type={'movie'} />
-        ) : (
-          <SearchTvContent lists={filteredTvSearch} type={'tv'} />
-        )} */}
-        {/* <SearchContent
-          type={type}
-          lists={type === 'movie' ? filteredMovieSearch : filteredTvSearch}
-          ref={type === 'movie' ? movieRef : tvRef}
-        /> */}
+        {type === 'movie' ? <SearchMovieContent type="movie" query={query!} /> : <SearchTvContent type="tv" query={query} />}
       </SearchContentArea>
     </Container>
   );

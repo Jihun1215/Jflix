@@ -30,22 +30,14 @@ export const getContentCase = async (type: string, id: number | undefined) => {
 };
 
 export const getSerachMovieContent = async (pageParam: number, query: string) => {
-  console.log(pageParam);
-  console.log(query);
-  // console.log(`movie search ${query} ${pageParam} 시작`);
   const params = { page: pageParam, query };
 
   const response = await axiosInstance.get(`${URL}/search/movie`, { params });
-  // console.log(`movie search ${query} ${pageParam} 끝`);
   return response;
 };
 
 export const getSerachtvContent = async (pageParam: number, query: string) => {
-  console.log(pageParam);
-  console.log(query);
-  // console.log(`movie search ${query} ${pageParam} 시작`);
   const params = { page: pageParam, query };
   const response = await axiosInstance.get(`${URL}/search/tv`, { params });
-  // console.log(`movie search ${query} ${pageParam} 끝`);
   return response;
 };

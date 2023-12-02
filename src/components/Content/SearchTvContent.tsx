@@ -1,21 +1,45 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
+import { modalIsOpenState, ModalTypeAndId, SearchTvTotalCount } from 'state/atoms';
 
-import { getImgPath } from 'utils/api';
+import InfiniteScroll from 'react-infinite-scroller';
+
+import { useInfiniteQuery, InfiniteData } from 'react-query';
+import { AxiosResponse } from 'axios';
+
+import { getImgPath, getSerachtvContent } from 'utils/api';
 import { IContent } from 'type/type';
 
-import { toUp } from 'styles/animation';
+import { Spinner } from 'components/Spinner';
 
+import { toUp } from 'styles/animation';
 import noimg from 'assets/noimg.png';
 
-export const SearchTvContent = ({ lists, type }: { lists: IContent[]; type: string }) => {
-  //   console.log(lists);
-  // console.log(lists);
-  // console.log(ref);
+export const SearchTvContent = ({ type, query }: { type: string; query: string }) => {
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
+    'searchMovies',
+    ({ pageParam = 1 }) => getSerachtvContent(pageParam, query),
+    {
+      getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
+        return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
+      },
+    }
+  );
+
+  const lists = data?.pages.flatMap((page) => page.data.results);
+  const totalCount = data?.pages[0]?.data.total_results;
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
+  const [, setTvcount] = useRecoilState(SearchTvTotalCount);
+  // console.log(totalCount);
+
+  // console.log(data?.pages[0].data.total_results);
+
+  useEffect(() => {
+    setTvcount(totalCount!);
+  }, [totalCount]);
 
   const onClickModalOpen = (id: number) => {
     const modalInfo = { type, id };
@@ -23,34 +47,45 @@ export const SearchTvContent = ({ lists, type }: { lists: IContent[]; type: stri
     setModalTypeAndId(modalInfo);
   };
 
-  // console.log(scrollContainerRef);
+  if (isLoading) {
+    return (
+      // <ContentArea>
+      <Spinner />
+      //  </ContentArea>
+    );
+  }
   return (
-    // <InfiniteScroll pageStart={0} loadMore={() => fetchNextPage().then(() => {})} hasMore={hasNextPage} loader={<Spinner />}>
-    <ContentArea>
-      {lists?.map((data: IContent, index: number) => {
-        return (
-          <Content
-            key={index}
-            onClick={() => {
-              onClickModalOpen(data?.id);
-            }}
-          >
-            <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
-            <Info>
-              <Title>{data.title}</Title>
-              <Date>
-                개봉일: <span>{data.release_date}</span>
-              </Date>
+    <InfiniteScroll
+      pageStart={1} // 페이지의 시작값
+      loadMore={(page) => fetchNextPage(page)} // 페이지를 불러오는 함수
+      hasMore={hasNextPage} // 더 불러올 페이지가 있는지 여부
+      loader={<Spinner key={0} />} // 로딩 중에 표시할 컴포넌트
+    >
+      <ContentArea>
+        {lists?.map((data: IContent, index: number) => {
+          return (
+            <Content
+              key={index}
+              onClick={() => {
+                onClickModalOpen(data?.id);
+              }}
+            >
+              <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
+              <Info>
+                <Title>{data.title}</Title>
+                <Date>
+                  개봉일: <span>{data.release_date}</span>
+                </Date>
 
-              <Vote>
-                평점: <span> {data.vote_average}</span>
-              </Vote>
-            </Info>
-          </Content>
-        );
-      })}
-    </ContentArea>
-    // </InfiniteScroll>
+                <Vote>
+                  평점: <span> {data.vote_average}</span>
+                </Vote>
+              </Info>
+            </Content>
+          );
+        })}
+      </ContentArea>
+    </InfiniteScroll>
   );
 };
 

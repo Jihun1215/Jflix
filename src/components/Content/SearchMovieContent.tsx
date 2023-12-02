@@ -1,15 +1,16 @@
-// import { useRef, useCallback } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
+import { modalIsOpenState, ModalTypeAndId, SearchMovieTotalCount } from 'state/atoms';
 
-// import InfiniteScroll from 'react-infinite-scroller';
-import { useInfiniteQuery } from 'react-query';
+import InfiniteScroll from 'react-infinite-scroller';
 
-import { getSerachMovieContent } from 'utils/api';
+import { useInfiniteQuery, InfiniteData } from 'react-query';
+import { AxiosResponse } from 'axios';
 
-import { getImgPath } from 'utils/api';
+import { getSerachMovieContent, getImgPath } from 'utils/api';
+
 import { IContent } from 'type/type';
 
 import { toUp } from 'styles/animation';
@@ -17,29 +18,42 @@ import { toUp } from 'styles/animation';
 import noimg from 'assets/noimg.png';
 import { Spinner } from 'components/Spinner';
 
+// type GetSearchMovieContentFn = (pageParam: number, query: string) => Promise<AxiosResponse<IContent[]>>;
+
 export const SearchMovieContent = ({ type, query }: { type: string; query: string }) => {
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
+  // const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
+  //   'searchMovies',
+  //   ({ pageParam = 1 }: QueryFunctionContext) => getSerachMovieContent(pageParam, query) as Promise<AxiosResponse<IContent[]>>,
+  //   {
+  //     getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
+  //       return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
+  //     },
+  //   }
+  // );
+
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
     'searchMovies',
     ({ pageParam = 1 }) => getSerachMovieContent(pageParam, query),
     {
-      getNextPageParam: (lastPage, allPages) => {
-        // 만약 마지막 페이지의 데이터에서 다음 페이지가 있는지 확인하고 있다면 다음 페이지의 파라미터를 반환합니다.
-        return lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined;
+      getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
+        return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
       },
     }
   );
 
-  const lists = data?.pages[0]?.data.results;
-
-  console.log(data?.pages[0]?.data);
-  console.log(fetchNextPage);
-  console.log(hasNextPage);
-  console.log(isLoading);
-  console.log(isFetchingNextPage);
+  const lists = data?.pages.flatMap((page) => page.data.results);
+  const totalCount = data?.pages[0]?.data.total_results;
+  console.log(totalCount);
 
   // export const SearchMovieContent = ({ lists, type }: { lists: IContent[]; type: string }) => {
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
+  const [, setMoviecount] = useRecoilState(SearchMovieTotalCount);
+
+  useEffect(() => {
+    setMoviecount(totalCount);
+  }, [totalCount]);
+
   const onClickModalOpen = (id: number) => {
     const modalInfo = { type, id };
     setIsModalOpen(true);
@@ -47,37 +61,45 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
   };
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      // <ContentArea>
+      <Spinner />
+      //  </ContentArea>
+    );
   }
 
-  // console.log(scrollContainerRef);
   return (
-    // <InfiniteScroll pageStart={1} loadMore={() => fetchNextPage().then(() => {})} hasMore={hasNextPage} loader={<Spinner />}>
-    <ContentArea>
-      {lists?.map((data: IContent, index: number) => {
-        return (
-          <Content
-            key={index}
-            onClick={() => {
-              onClickModalOpen(data?.id);
-            }}
-          >
-            <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
-            <Info>
-              <Title>{data.title}</Title>
-              <Date>
-                개봉일: <span>{data.release_date}</span>
-              </Date>
+    <InfiniteScroll
+      pageStart={1} // 페이지의 시작값
+      loadMore={(page) => fetchNextPage(page)} // 페이지를 불러오는 함수
+      hasMore={hasNextPage} // 더 불러올 페이지가 있는지 여부
+      loader={<Spinner key={0} />} // 로딩 중에 표시할 컴포넌트
+    >
+      <ContentArea>
+        {lists?.map((data: IContent, index: number) => {
+          return (
+            <Content
+              key={index}
+              onClick={() => {
+                onClickModalOpen(data?.id);
+              }}
+            >
+              <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
+              <Info>
+                <Title>{data.title}</Title>
+                <Date>
+                  개봉일: <span>{data.release_date}</span>
+                </Date>
 
-              <Vote>
-                평점: <span> {data.vote_average}</span>
-              </Vote>
-            </Info>
-          </Content>
-        );
-      })}
-    </ContentArea>
-    // </InfiniteScroll>
+                <Vote>
+                  평점: <span> {data.vote_average}</span>
+                </Vote>
+              </Info>
+            </Content>
+          );
+        })}
+      </ContentArea>
+    </InfiniteScroll>
   );
 };
 

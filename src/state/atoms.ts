@@ -27,14 +27,14 @@ export const windowWidthState = atom({
   default: window.innerWidth,
 });
 
-export const SearchMoviePageState = atom<number>({
-  key: 'searchmoviepage',
-  default: 1,
+export const SearchMovieTotalCount = atom<number>({
+  key: 'searchmoviecount',
+  default: 0,
 });
 
-export const SearchTvPageState = atom<number>({
-  key: 'searchTvpage',
-  default: 1,
+export const SearchTvTotalCount = atom<number>({
+  key: 'searchTvcount',
+  default: 0,
 });
 
 export const ModalTypeAndId = atom<IModal | undefined>({
