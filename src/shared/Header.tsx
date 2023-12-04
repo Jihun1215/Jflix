@@ -8,7 +8,7 @@ import { Headernav } from './Header/Headernav';
 import { Headersearch } from './Header/Headersearch';
 import { Headerdment } from './Header/Headerdment';
 
-import { useDebouncedResize } from 'hooks/useDebouncedResize';
+import { useDebouncedWidth } from 'hooks/useDebouncedWidth';
 
 const logoVariants = {
   start: {
@@ -41,7 +41,7 @@ const headerVariants = {
 };
 
 export const Header = () => {
-  const windowWidth = useDebouncedResize();
+  const windowWidth = useDebouncedWidth();
 
   // Nav scroll animation
   const { scrollY } = useScroll();

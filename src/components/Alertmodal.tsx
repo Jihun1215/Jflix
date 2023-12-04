@@ -29,14 +29,12 @@ export const Alertmodal = () => {
     }
   }, [alertmodal, setAlertmodla]);
 
-  //   console.log
-
   return (
     <AnimatePresence>
       {alertmodal && (
         <Container variants={backdropVariants} initial="hidden" animate="visible" exit="hidden">
           <ModalCard variants={modalVariants} initial="hidden" animate="visible" exit="hidden" onClick={(e) => e.stopPropagation()}>
-            {alertText}
+            <Text>{alertText}</Text>
           </ModalCard>
         </Container>
       )}
@@ -69,3 +67,5 @@ const ModalCard = styled(motion.div)`
   font-size: 20px;
   font-weight: 600;
 `;
+
+const Text = styled.p``;

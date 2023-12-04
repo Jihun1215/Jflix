@@ -12,7 +12,7 @@
 | FE  | 음지훈 | https://github.com/Jihun1215  |
 
 
-## 비품인 배포 사이트
+## 배포 사이트
 
 [Jflix]("")
 

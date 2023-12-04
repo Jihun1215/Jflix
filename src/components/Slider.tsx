@@ -8,7 +8,7 @@ import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { useDebouncedResize } from 'hooks/useDebouncedResize';
+import { useDebouncedWidth } from 'hooks/useDebouncedWidth';
 
 import { GrPrevious, GrNext } from 'react-icons/gr';
 import { getImgPath } from 'utils/api';
@@ -68,7 +68,7 @@ export const Slider = ({ lists, title }: SliderProps) => {
   const type = location.pathname === '/' ? 'movie' : 'tv';
 
   // Slider layout
-  const windowWidth = useDebouncedResize();
+  const windowWidth = useDebouncedWidth();
 
   const getSliderOffSet = (windowWidth: number) => {
     if (windowWidth <= 430) return 2;
