@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, MyListContentState, ModalTypeAndId } from 'state/atoms';
+import { modalIsOpenState, MyListContentState, ModalTypeAndId, AlertModalState, AlertTextState } from 'state/atoms';
 
 import { motion } from 'framer-motion';
 
@@ -62,22 +62,29 @@ export const Modal = () => {
   const genres: IGenre[] | undefined = modalList?.genres;
 
   // mylist code
+  const [, setAlertmodla] = useRecoilState(AlertModalState);
+  const [, setAlerttext] = useRecoilState(AlertTextState);
+
   const [saveContent, setSaveContent] = useRecoilState(MyListContentState);
 
   const existingItem = saveContent.find((item: { id: number; type: string }) => item.id === modalList?.id);
   const isSaveList = Boolean(existingItem);
 
+  // 찜하기 로직
   const onClickSaveContent = (id: number, type: string) => {
     const isIdInList = saveContent.includes(id);
 
     if (!isIdInList) {
       const updatedContent = [...saveContent, { id, type }];
       setSaveContent(updatedContent);
+      setAlertmodla(true);
+      setAlerttext('✅ 보관함에 저장되었습니다.');
     } else {
       alert('이미 보관 중인 데이터 입니당!');
     }
   };
 
+  // 찜하기 삭제하기
   const onClickDeleteContent = (id: number) => {
     const currentContent = [...saveContent];
 
@@ -86,6 +93,8 @@ export const Modal = () => {
     if (indexToRemove !== -1) {
       currentContent.splice(indexToRemove, 1);
       setSaveContent(currentContent);
+      setAlertmodla(true);
+      setAlerttext('❌ 보관함에 삭제되었습니다.');
     } else {
       alert('해당 ID가 Recoil 상태에 없습니다.');
     }

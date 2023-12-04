@@ -42,6 +42,16 @@ export const ModalTypeAndId = atom<IModal | undefined>({
   default: undefined,
 });
 
+export const AlertModalState = atom<boolean>({
+  key: 'alertmodal',
+  default: false,
+});
+
+export const AlertTextState = atom<string | undefined>({
+  key: 'alertText',
+  default: undefined,
+});
+
 const { persistAtom } = recoilPersist({
   key: 'movielistMovie',
   storage: localStorage,

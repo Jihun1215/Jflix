@@ -1,19 +1,21 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState } from 'state/atoms';
+import { modalIsOpenState, AlertModalState } from 'state/atoms';
 
 import { Header } from './Header';
-import { Modal } from 'components';
+import { Modal, Alertmodal } from 'components';
 
 export const Layout = () => {
   const [isModalOpen] = useRecoilState(modalIsOpenState);
+  const [alertModla] = useRecoilState(AlertModalState);
 
   return (
     <LayoutContiner>
       <Header />
       <Outlet />
       {isModalOpen && <Modal />}
+      {alertModla && <Alertmodal />}
     </LayoutContiner>
   );
 };
