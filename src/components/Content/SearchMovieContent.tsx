@@ -21,15 +21,7 @@ import { Spinner } from 'components/Spinner';
 // type GetSearchMovieContentFn = (pageParam: number, query: string) => Promise<AxiosResponse<IContent[]>>;
 
 export const SearchMovieContent = ({ type, query }: { type: string; query: string }) => {
-  // const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
-  //   'searchMovies',
-  //   ({ pageParam = 1 }: QueryFunctionContext) => getSerachMovieContent(pageParam, query) as Promise<AxiosResponse<IContent[]>>,
-  //   {
-  //     getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
-  //       return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
-  //     },
-  //   }
-  // );
+
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
     'searchMovies',
@@ -62,9 +54,7 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
 
   if (isLoading) {
     return (
-      // <ContentArea>
       <Spinner />
-      //  </ContentArea>
     );
   }
 

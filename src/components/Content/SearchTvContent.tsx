@@ -33,9 +33,6 @@ export const SearchTvContent = ({ type, query }: { type: string; query: string }
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
   const [, setTvcount] = useRecoilState(SearchTvTotalCount);
-  // console.log(totalCount);
-
-  // console.log(data?.pages[0].data.total_results);
 
   useEffect(() => {
     setTvcount(totalCount!);
@@ -72,7 +69,7 @@ export const SearchTvContent = ({ type, query }: { type: string; query: string }
             >
               <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
               <Info>
-                <Title>{data.title}</Title>
+                <Title>{data.name}</Title>
                 <Date>
                   개봉일: <span>{data.release_date}</span>
                 </Date>
