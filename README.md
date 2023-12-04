@@ -1,27 +1,59 @@
-# React + TypeScript + Vite
+# The MovieDB API를 사용한 넷플릭스 클론 코딩 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 기능 
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# 프로젝트명 - Jflix
 
-## Expanding the ESLint configuration
+## 팀원 소개
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+| 스택  | 이름   | 깃허브 주소                 |
+|-----| ------ | --------------------------- |
+| FE  | 음지훈 | https://github.com/Jihun1215  |
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+## 비품인 배포 사이트
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+[Jflix]("")
+
+## 프로젝트 기능
+영화 및 Tv의 대한 평점 및 개봉일을 볼 수 있는 웹 사이트 입니다. 
+
+## 🌟 1. 
+
+## 🔍 2. 검색 기능
+
+## 🔍 3. 찜하기 기능
+
+ - 마음에 드는 콘텐츠를 찜을 통해 보관할 수 있습니다.
+
+#
+
+#
+
+## 👥 4. 슬라이더 기능 
+### 4-1. 
+
+
+#
+
+
+
+
+
+## FE 적용 기술
+
+### 기술 구현
+
+### 기술 구현(라이브러리 사용)
+
+
+### []()☑ react-infinite-scroller
+ > 무한스크롤 기능을 구현하기 위한 라이브러리로 페이지가 가장 하단으로 내려가면 감지하기 위해서 선택했습니다. 
+#
+### []()☑ framer-motion
+> 사용자가 간편하게 비품 복수 등록을 하기위해 XLSX 라이브러리를 사용해 sheet의 읽기와 쓰기등 여러가지 기능을 이용하기 위해 선택했습니다.
+#
+### []()☑ React-Query
+> 일단 모시깽
+#
