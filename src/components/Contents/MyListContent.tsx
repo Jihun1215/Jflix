@@ -53,49 +53,55 @@ const Lists = styled.div`
   width: 100%;
   height: 50%;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   column-gap: 20px;
   row-gap: 40px;
 
   color: ${({ theme }) => theme.colors.white};
 
-  @media (max-width: 1170px) {
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @media (max-width: 1180px) {
     grid-template-columns: repeat(4, 1fr);
   }
-
-  @media (max-width: 970px) {
+  @media (max-width: 920px) {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  @media (max-width: 605px) {
+  @media (max-width: 635px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
 
 const Content = styled.div`
-  width: 175px;
-  height: 250px;
-  background-color: #333;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
+  width: 200px;
+  height: 300px;
   ${({ theme }) => theme.FlexCol};
-  align-items: center;
-  justify-content: center;
+  ${({ theme }) => theme.FlexCenter};
+  background-color: #333;
   cursor: pointer;
   animation: ${toLeft} 0.45s ease-in-out;
-  @media (max-width: 440px) {
-    width: 150px;
+  @media (max-width: 700px) {
+    width: 175px;
     height: 225px;
+  }
+
+  @media (max-width: 430px) {
+    width: 150px;
+    height: 200px;
   }
 `;
 
 const Poster = styled.img`
   width: 100%;
-  height: 200px;
+  height: 250px;
   border-radius: 4px;
   background-image: cover;
-  @media (max-width: 440px) {
-    height: 175px;
+  @media (max-width: 700px) {
+    height: 185px;
+  }
+  @media (max-width: 430px) {
+    height: 170px;
   }
 `;
 
@@ -104,6 +110,14 @@ const Info = styled.div`
   height: 50px;
   ${({ theme }) => theme.FlexCol};
   align-items: center;
+
+  @media (max-width: 700px) {
+    height: 40px;
+  }
+
+  @media (max-width: 430px) {
+    height: 30px;
+  }
 `;
 
 const Name = styled.h2`

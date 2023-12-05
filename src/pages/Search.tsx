@@ -2,12 +2,9 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useRecoilValue } from 'recoil';
-import { SearchMovieTotalCount, SearchTvTotalCount } from 'state/atoms';
-
 import { GrLinkPrevious } from 'react-icons/gr';
 
-import { SearchMovieContent, SearchTvContent } from 'components/Content';
+import { SearchMovieContent, SearchTvContent } from 'components/Contents';
 
 export const Search = () => {
   const [type, setType] = useState<string>('movie');
@@ -24,28 +21,6 @@ export const Search = () => {
     setType(section);
     navigate(`/search/${section}?q=${query}`);
   };
-
-  const searchMovieCount = useRecoilValue(SearchMovieTotalCount);
-  const searchTvCount = useRecoilValue(SearchTvTotalCount);
-
-  // const tvTotalCount = useRecoilValue(SearchTvContent);
-  // console.log('영화 총 갯수', searchMovieCount);
-  // console.log('tv 총 갯수', searchTvCount);
-
-  // movie data fetch
-  // const [movieLoading, movietotalCount, filteredMovieSearch] = useInfiniteSearchQuery('movie', query!, getSerachMovieContent);
-
-  // const [tvLoading, tvtotalCount, filteredTvSearch] = useInfiniteSearchQuery('tv', query!, getSerachtvContent);
-  // console.log('영화데이터', filteredMovieSearch);
-  // console.log('Tv데이터', filteredTvSearch);
-
-  //  const Loading = movieLoading || tvLoading;
-
-  //   if (Loading) {
-  //     return  <Spinner />;
-  //   }
-
-  // 무한스크롤 관련한 데이터 패칭 !
 
   return (
     <Container>
@@ -71,7 +46,7 @@ export const Search = () => {
       </Tabnav>
 
       <SearchContentArea>
-        {type === 'movie' ? <SearchMovieContent type="movie" query={query!} /> : <SearchTvContent type="tv" query={query} />}
+        {type === 'movie' ? <SearchMovieContent type="movie" query={query!} /> : <SearchTvContent type="tv" query={query!} />}
       </SearchContentArea>
     </Container>
   );

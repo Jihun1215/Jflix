@@ -1,31 +1,25 @@
-import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useRecoilState } from 'recoil';
-import { modalIsOpenState, ModalTypeAndId, SearchMovieTotalCount } from 'state/atoms';
+import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { useInfiniteQuery, InfiniteData } from 'react-query';
 import { AxiosResponse } from 'axios';
 
-import { getSerachMovieContent, getImgPath } from 'utils/api';
-
+import { getImgPath, getSerachtvContent } from 'utils/api';
 import { IContent } from 'type/type';
 
-import { toUp } from 'styles/animation';
-
-import noimg from 'assets/noimg.png';
 import { Spinner } from 'components/Spinner';
 
-// type GetSearchMovieContentFn = (pageParam: number, query: string) => Promise<AxiosResponse<IContent[]>>;
+import { toUp } from 'styles/animation';
+import noimg from 'assets/noimg.png';
 
-export const SearchMovieContent = ({ type, query }: { type: string; query: string }) => {
-
-
+export const SearchTvContent = ({ type, query }: { type: string; query: string }) => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
     'searchMovies',
-    ({ pageParam = 1 }) => getSerachMovieContent(pageParam, query),
+    ({ pageParam = 1 }) => getSerachtvContent(pageParam, query),
     {
       getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
         return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
@@ -34,17 +28,9 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
   );
 
   const lists = data?.pages.flatMap((page) => page.data.results);
-  const totalCount = data?.pages[0]?.data.total_results;
-  console.log(totalCount);
-
-  // export const SearchMovieContent = ({ lists, type }: { lists: IContent[]; type: string }) => {
+  // const totalCount = data?.pages[0]?.data.total_results;
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
-  const [, setMoviecount] = useRecoilState(SearchMovieTotalCount);
-
-  useEffect(() => {
-    setMoviecount(totalCount);
-  }, [totalCount]);
 
   const onClickModalOpen = (id: number) => {
     const modalInfo = { type, id };
@@ -53,11 +39,8 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
   };
 
   if (isLoading) {
-    return (
-      <Spinner />
-    );
+    return <Spinner />;
   }
-
   return (
     <InfiniteScroll
       pageStart={1} // 페이지의 시작값
@@ -76,14 +59,10 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
             >
               <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
               <Info>
-                <Title>{data.title}</Title>
-                <Date>
-                  개봉일: <span>{data.release_date}</span>
-                </Date>
+                <Title>{data.name}</Title>
+                <Date> {data.release_date ? <span>개봉일 :{data.release_date}</span> : <span>제공된 개봉일이 없습니다.</span>}</Date>
 
-                <Vote>
-                  평점: <span> {data.vote_average}</span>
-                </Vote>
+                <Vote>평점: {data.vote_average ? <span>{data.vote_average}</span> : <span>제공된 평점이 없습니다.</span>}</Vote>
               </Info>
             </Content>
           );
@@ -95,17 +74,22 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
 
 const ContentArea = styled.div`
   position: relative;
-  width: 100%;
-  max-height: 100%;
+  ${({ theme }) => theme.WH100};
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   column-gap: 20px;
   row-gap: 40px;
   color: ${({ theme }) => theme.colors.white};
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @media (max-width: 1180px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
   @media (max-width: 920px) {
     grid-template-columns: repeat(3, 1fr);
   }
-  @media (max-width: 479px) {
+  @media (max-width: 570px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
@@ -117,20 +101,38 @@ const Content = styled.div`
   ${({ theme }) => theme.FlexCenter};
   cursor: pointer;
   animation: ${toUp} 0.45s ease-in-out;
+  @media (max-width: 700px) {
+    width: 150px;
+    height: 200px;
+  }
 `;
 
 const Poster = styled.img`
   width: 100%;
-  height: 200px;
+  height: 225px;
+  border-radius: 4px;
+  background-image: cover;
+
+  @media (max-width: 700px) {
+    height: 150px;
+  }
 `;
 
 const Info = styled.div`
   width: 100%;
-  height: 100px;
+  height: 75px;
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   padding-top: 15px;
   gap: 0 10px;
+
+  @media (max-width: 700px) {
+    height: 50px;
+  }
+
+  /*  @media (max-width: 430px) {
+    height: 30px;
+  } */
 `;
 
 const Title = styled.h2`

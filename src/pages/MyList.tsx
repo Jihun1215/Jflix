@@ -9,7 +9,7 @@ import { MyListContentState } from 'state/atoms';
 import { getModalContentData } from 'utils/api';
 
 import { Spinner } from 'components';
-import { MyListContent } from 'components/Content/MyListContent';
+import { MyListContent } from 'components/Contents/MyListContent';
 
 interface IMylist {
   id: number;
@@ -30,8 +30,7 @@ export const MyList = () => {
     setTvList(filteredTvList);
   }, [mylistcontent]);
 
-
-  // data 불러오기
+  // 병렬적인 데이터 불러오기
   const myMovieQueries = useQueries(
     movieList.map((data) => ({
       queryKey: ['myMovie', data.id], // 수정된 부분
@@ -39,7 +38,7 @@ export const MyList = () => {
     }))
   );
 
-  // data 불러오기
+  // 병렬적인 데이터불러오기
   const myTvQueries = useQueries(
     tvList.map((data) => ({
       queryKey: ['mytv', data.id],
@@ -47,13 +46,14 @@ export const MyList = () => {
     }))
   );
 
+  // 데이터만 뽑기
   const myMovieData = myMovieQueries?.map((myMovie) => myMovie.data);
   const myTvData = myTvQueries?.map((myTv) => myTv.data);
 
-  const isMyMovieLoading = myMovieQueries.some((myMovie) => myMovie.isLoading);
-  const isMyTvLoading = myTvQueries.some((myTv) => myTv.isLoading);
+  const MyMovieLoading = myMovieQueries.some((myMovie) => myMovie.isLoading);
+  const MyTvLoading = myTvQueries.some((myTv) => myTv.isLoading);
 
-  const isLoading = isMyMovieLoading || isMyTvLoading;
+  const isLoading = MyMovieLoading || MyTvLoading;
 
   if (isLoading) {
     return <Spinner />;
