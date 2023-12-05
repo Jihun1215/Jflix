@@ -124,3 +124,9 @@ export interface ISeason {
   poster_path: string;
   season_number: number;
 }
+
+// 무한스크롤
+export interface InfiniteData<T> {
+  pages: T[];
+  pageParams: number[];
+}

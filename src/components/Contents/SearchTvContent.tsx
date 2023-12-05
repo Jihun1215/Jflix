@@ -6,7 +6,6 @@ import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { useInfiniteQuery, InfiniteData } from 'react-query';
-import { AxiosResponse } from 'axios';
 
 import { getImgPath, getSerachtvContent } from 'utils/api';
 import { IContent } from 'type/type';
@@ -18,17 +17,18 @@ import noimg from 'assets/noimg.png';
 
 export const SearchTvContent = ({ type, query }: { type: string; query: string }) => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
-    'searchMovies',
-    ({ pageParam = 1 }) => getSerachtvContent(pageParam, query),
+    'searchTv',
+    ({ pageParam = 1 }) => getSerachtvContent({ pageParam, query }),
     {
-      getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
-        return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
+      getNextPageParam: (lastPage: InfiniteData<IContent[]>) => {
+        return lastPage?.page < lastPage?.total_pages ? lastPage?.page + 1 : null;
       },
     }
   );
 
-  const lists = data?.pages.flatMap((page) => page.data.results);
-  // const totalCount = data?.pages[0]?.data.total_results;
+  const lists = data?.pages.flatMap((page) => page.results);
+
+
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
@@ -44,7 +44,7 @@ export const SearchTvContent = ({ type, query }: { type: string; query: string }
   return (
     <InfiniteScroll
       pageStart={1} // 페이지의 시작값
-      loadMore={(page) => fetchNextPage(page)} // 페이지를 불러오는 함수
+      loadMore={() => fetchNextPage()} // 페이지를 불러오는 함수
       hasMore={hasNextPage} // 더 불러올 페이지가 있는지 여부
       loader={<Spinner key={0} />} // 로딩 중에 표시할 컴포넌트
     >
@@ -60,7 +60,9 @@ export const SearchTvContent = ({ type, query }: { type: string; query: string }
               <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
               <Info>
                 <Title>{data.name}</Title>
-                <Date> {data.release_date ? <span>개봉일 :{data.release_date}</span> : <span>제공된 개봉일이 없습니다.</span>}</Date>
+                <Date>
+                  <span>개봉일: {data.first_air_date}</span>
+                </Date>
 
                 <Vote>평점: {data.vote_average ? <span>{data.vote_average}</span> : <span>제공된 평점이 없습니다.</span>}</Vote>
               </Info>
@@ -74,7 +76,8 @@ export const SearchTvContent = ({ type, query }: { type: string; query: string }
 
 const ContentArea = styled.div`
   position: relative;
-  ${({ theme }) => theme.WH100};
+  width: 100%;
+  max-height: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   column-gap: 20px;
@@ -124,15 +127,10 @@ const Info = styled.div`
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   padding-top: 15px;
-  gap: 0 10px;
-
+  gap: 5px 0;
   @media (max-width: 700px) {
     height: 50px;
   }
-
-  /*  @media (max-width: 430px) {
-    height: 30px;
-  } */
 `;
 
 const Title = styled.h2`
@@ -141,6 +139,9 @@ const Title = styled.h2`
   font-size: 16px;
   font-weight: 700;
   text-align: center;
+  @media (max-width: 700px) {
+    height: 20px;
+  }
 `;
 
 const Date = styled.p`
@@ -151,6 +152,9 @@ const Date = styled.p`
   span {
     color: ${({ theme }) => theme.colors.greey};
   }
+  @media (max-width: 700px) {
+    height: 10px;
+  }
 `;
 
 const Vote = styled.p`
@@ -160,5 +164,8 @@ const Vote = styled.p`
   font-weight: 600;
   span {
     color: ${({ theme }) => theme.colors.yellow};
+  }
+  @media (max-width: 700px) {
+    height: 10px;
   }
 `;

@@ -6,7 +6,6 @@ import { modalIsOpenState, ModalTypeAndId } from 'state/atoms';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { useInfiniteQuery, InfiniteData } from 'react-query';
-import { AxiosResponse } from 'axios';
 
 import { getSerachMovieContent, getImgPath } from 'utils/api';
 
@@ -19,19 +18,17 @@ import { Spinner } from 'components/Spinner';
 
 export const SearchMovieContent = ({ type, query }: { type: string; query: string }) => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
-    'searchMovies',
-    ({ pageParam = 1 }) => getSerachMovieContent(pageParam, query),
+    'searchMovie',
+    ({ pageParam = 1 }) => getSerachMovieContent({ pageParam, query }),
     {
-      getNextPageParam: (lastPage: InfiniteData<AxiosResponse<IContent[]>>) => {
-        return lastPage.data?.page < lastPage.data?.total_pages ? lastPage.data?.page + 1 : null;
+      getNextPageParam: (lastPage: InfiniteData<IContent[]>) => {
+        return lastPage?.page < lastPage?.total_pages ? lastPage?.page + 1 : null;
       },
     }
   );
 
-  const lists = data?.pages.flatMap((page) => page.data.results);
-  // const totalCount = data?.pages[0]?.data.total_results;
+  const lists = data?.pages.flatMap((page) => page.results);
 
-  // export const SearchMovieContent = ({ lists, type }: { lists: IContent[]; type: string }) => {
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
@@ -48,7 +45,7 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
   return (
     <InfiniteScroll
       pageStart={1} // 페이지의 시작값
-      loadMore={(page) => fetchNextPage(page)} // 페이지를 불러오는 함수
+      loadMore={() => fetchNextPage()} // 페이지를 불러오는 함수
       hasMore={hasNextPage} // 더 불러올 페이지가 있는지 여부
       loader={<Spinner key={0} />} // 로딩 중에 표시할 컴포넌트
     >
@@ -82,7 +79,8 @@ export const SearchMovieContent = ({ type, query }: { type: string; query: strin
 
 const ContentArea = styled.div`
   position: relative;
-  ${({ theme }) => theme.WH100};
+  width: 100%;
+  max-height: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   column-gap: 20px;
@@ -132,15 +130,10 @@ const Info = styled.div`
   ${({ theme }) => theme.FlexCol};
   align-items: center;
   padding-top: 15px;
-  gap: 0 10px;
-
+  gap: 5px 0;
   @media (max-width: 700px) {
     height: 50px;
   }
-
-  /*  @media (max-width: 430px) {
-    height: 30px;
-  } */
 `;
 
 const Title = styled.h2`
@@ -149,6 +142,9 @@ const Title = styled.h2`
   font-size: 16px;
   font-weight: 700;
   text-align: center;
+  @media (max-width: 700px) {
+    height: 20px;
+  }
 `;
 
 const Date = styled.p`
@@ -159,6 +155,9 @@ const Date = styled.p`
   span {
     color: ${({ theme }) => theme.colors.greey};
   }
+  @media (max-width: 700px) {
+    height: 10px;
+  }
 `;
 
 const Vote = styled.p`
@@ -168,5 +167,8 @@ const Vote = styled.p`
   font-weight: 600;
   span {
     color: ${({ theme }) => theme.colors.yellow};
+  }
+  @media (max-width: 700px) {
+    height: 10px;
   }
 `;

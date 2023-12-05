@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { IContent, InfiniteData } from 'type/type';
 
 const ApiKey = import.meta.env.VITE_API_KEY;
-const URL = 'https://api.themoviedb.org/3/';
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
@@ -29,15 +29,22 @@ export const getContentCase = async (type: string, id: number | undefined) => {
   return response.data;
 };
 
-export const getSerachMovieContent = async (pageParam: number, query: string) => {
+export const getSerachMovieContent = async ({
+  pageParam,
+  query,
+}: {
+  pageParam: number;
+  query: string;
+}): Promise<InfiniteData<IContent[]>> => {
   const params = { page: pageParam, query };
 
-  const response = await axiosInstance.get(`${URL}/search/movie`, { params });
-  return response;
+  const response = await axiosInstance.get(`/search/movie`, { params });
+  return response.data;
 };
 
-export const getSerachtvContent = async (pageParam: number, query: string) => {
+export const getSerachtvContent = async ({ pageParam, query }: { pageParam: number; query: string }): Promise<InfiniteData<IContent[]>> => {
   const params = { page: pageParam, query };
-  const response = await axiosInstance.get(`${URL}/search/tv`, { params });
-  return response;
+
+  const response = await axiosInstance.get(`/search/tv`, { params });
+  return response.data;
 };
