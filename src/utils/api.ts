@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { IContent, InfiniteData } from 'type/type';
 
 const ApiKey = import.meta.env.VITE_API_KEY;
 
@@ -29,20 +28,14 @@ export const getContentCase = async (type: string, id: number | undefined) => {
   return response.data;
 };
 
-export const getSerachMovieContent = async ({
-  pageParam,
-  query,
-}: {
-  pageParam: number;
-  query: string;
-}): Promise<InfiniteData<IContent[]>> => {
+export const getSerachMovieContent = async ({ pageParam, query }: { pageParam: number; query: string }) => {
   const params = { page: pageParam, query };
 
   const response = await axiosInstance.get(`/search/movie`, { params });
   return response.data;
 };
 
-export const getSerachtvContent = async ({ pageParam, query }: { pageParam: number; query: string }): Promise<InfiniteData<IContent[]>> => {
+export const getSerachtvContent = async ({ pageParam, query }: { pageParam: number; query: string }) => {
   const params = { page: pageParam, query };
 
   const response = await axiosInstance.get(`/search/tv`, { params });

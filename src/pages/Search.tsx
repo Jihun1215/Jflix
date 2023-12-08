@@ -45,9 +45,7 @@ export const Search = () => {
         </Tab>
       </Tabnav>
 
-      <SearchContentArea>
-        {type === 'movie' ? <SearchMovieContent type="movie" query={query!} /> : <SearchTvContent type="tv" query={query!} />}
-      </SearchContentArea>
+      <SearchContentArea>{type === 'movie' ? <SearchMovieContent query={query!} /> : <SearchTvContent query={query!} />}</SearchContentArea>
     </Container>
   );
 };
