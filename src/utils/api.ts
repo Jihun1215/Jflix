@@ -30,7 +30,7 @@ export const getContentCase = async (type: string, id: number | undefined) => {
 
 export const getSerachMovieContent = async ({ pageParam, query }: { pageParam: number; query: string }) => {
   const params = { page: pageParam, query };
-
+  
   const response = await axiosInstance.get(`/search/movie`, { params });
   return response.data;
 };

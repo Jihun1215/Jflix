@@ -1,4 +1,4 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -37,17 +37,13 @@ export const Search = () => {
       <Tabnav>
         <Tab isactive={type === 'movie'} onClick={() => onClickTab('movie')}>
           영화
-          {/* (<span>{searchMovieCount}</span>) */}
         </Tab>
         <Tab isactive={type === 'tv'} onClick={() => onClickTab('tv')}>
           티비
-          {/* (<span>{searchTvCount}</span>) */}
         </Tab>
       </Tabnav>
 
-      <SearchContentArea>
-        {type === 'movie' ? <SearchMovieContent query={query!} /> : <SearchTvContent query={query!} />}
-      </SearchContentArea>
+      <SearchContentArea>{type === 'movie' ? <SearchMovieContent query={query!} /> : <SearchTvContent query={query!} />}</SearchContentArea>
     </Container>
   );
 };

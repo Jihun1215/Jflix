@@ -27,8 +27,7 @@ export const SearchTvContent = ({ query }: { query: string }) => {
       enabled: !!query,
     }
   );
-
-
+  const dataLength = data?.pages[0].results.length;
 
   useEffect(() => {
     if (!intersecting || !isSuccess || !hasNextPage || isFetchingNextPage) return;
@@ -41,7 +40,13 @@ export const SearchTvContent = ({ query }: { query: string }) => {
 
   return (
     <ContentArea>
-      <Item list={data?.pages || []} type="tv" />
+      {dataLength === 0 ? (
+        <ErrorArea>
+          <h3>검색된 콘텐츠가 없습니다.</h3>
+        </ErrorArea>
+      ) : (
+        <Item list={data?.pages || []} type="tv" />
+      )}
       <div ref={fetchMoreRef} />
     </ContentArea>
   );
@@ -67,5 +72,16 @@ const ContentArea = styled.div`
   }
   @media (max-width: 570px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const ErrorArea = styled.div`
+  width: 95vw;
+  height: 300px;
+  ${({ theme }) => theme.BoxCenter};
+  text-align: center;
+  h3 {
+    font-size: 24px;
+    font-weight: 800;
   }
 `;
