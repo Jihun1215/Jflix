@@ -15,14 +15,20 @@ export const SearchTvContent = ({ query }: { query: string }) => {
   const intersecting = useIntersection(fetchMoreRef);
 
   const { data, isSuccess, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    'searchTv',
+    ['searchTv', { pageParam: 1, query }],
     ({ pageParam = 1 }) => getSerachtvContent({ pageParam, query }),
     {
       getNextPageParam: (lastPage) => {
         return lastPage.page < lastPage.total_pages ? lastPage.page + 1 : null;
       },
+
+      staleTime: 100000, // 예: 10초
+      // enabled를 사용하여 쿼리값이 변경될 때마다 데이터를 다시 불러오도록 설정
+      enabled: !!query,
     }
   );
+
+
 
   useEffect(() => {
     if (!intersecting || !isSuccess || !hasNextPage || isFetchingNextPage) return;

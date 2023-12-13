@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import { useInfiniteQuery } from 'react-query';
 import { getSerachMovieContent } from 'utils/api';
 
-import { useIntersection } from 'hooks/useIntersection';
-
 import { Spinner } from 'components/Spinner';
+import { useIntersection } from 'hooks/useIntersection';
 
 import { Item } from './Item';
 
@@ -15,12 +14,16 @@ export const SearchMovieContent = ({ query }: { query: string }) => {
   const intersecting = useIntersection(fetchMoreRef);
 
   const { data, isSuccess, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    'searchMovie',
+    ['searchMovie', { pageParam: 1, query }],
     ({ pageParam = 1 }) => getSerachMovieContent({ pageParam, query }),
     {
       getNextPageParam: (lastPage) => {
         return lastPage.page < lastPage.total_pages ? lastPage.page + 1 : null;
       },
+
+      staleTime: 100000, // 예: 10초
+      // enabled를 사용하여 쿼리값이 변경될 때마다 데이터를 다시 불러오도록 설정
+      enabled: !!query,
     }
   );
 
@@ -32,20 +35,6 @@ export const SearchMovieContent = ({ query }: { query: string }) => {
   if (isLoading) {
     return <Spinner />;
   }
-
-  /* 
-  무한 스크롤 적용 시 데이터 나오는 형식
-    data: {
-      pages: {
-        {results: [...]}
-        {results: [...]}
-        {results: [...]}
-        {results: [...]}
-        {results: [...]}
-        {results: [...]}
-      }
-    }
-  */
 
   return (
     <ContentArea>

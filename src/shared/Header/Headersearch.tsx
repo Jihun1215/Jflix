@@ -12,6 +12,7 @@ export const Headersearch = () => {
 
   const valueRef = useRef<HTMLInputElement>(null);
 
+  // input 활성화 State
   const [isInput, setIsInput] = useState<boolean>(false);
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,15 +22,15 @@ export const Headersearch = () => {
   const onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (searchValue === '') {
-      // valueRef.current.focus();
       return;
     }
     navigate(`/search/movie?q=${searchValue}`);
     setIsInput(false);
     setSearcvalue('');
+    window.scrollTo({ top: 0 });
   };
 
-  const onClickCloseModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onClickElement = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const element = e.target as HTMLElement;
     const TagName = element.tagName;
     e.stopPropagation();
@@ -37,13 +38,14 @@ export const Headersearch = () => {
       setIsInput(false);
       setSearcvalue('');
     } else if (TagName === 'svg' || TagName === 'circle') {
+      if (valueRef.current) valueRef.current.focus();
       setIsInput(true);
       setSearcvalue('');
     }
   };
 
   return (
-    <div onClick={onClickCloseModal}>
+    <div onClick={onClickElement}>
       {isInput && <Container />}
       <SearchArea onSubmit={onSubmit}>
         <SearchInput
@@ -67,6 +69,7 @@ const Container = styled.div`
   z-index: 9995;
   background-color: rgba(0, 0, 0, 0.6);
   ${({ theme }) => theme.BoxCenter};
+  opacity: 1;
 `;
 
 const SearchArea = styled.form`

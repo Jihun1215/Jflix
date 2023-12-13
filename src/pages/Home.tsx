@@ -7,11 +7,14 @@ import { Banner, Slider, Spinner } from 'components';
 
 export const Home = () => {
   const type = 'movie';
+
   const {
     data: popularMovieList,
     isLoading: popularLoading,
     isError: popularError,
-  } = useQuery(['popularMovie', type, 'popular'], () => getContents(type, 'popular'));
+  } = useQuery(['popularMovie', type, 'popular'], () => getContents(type, 'popular'), {
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+  });
 
   const {
     data: topRatedMovieList,
@@ -30,7 +33,6 @@ export const Home = () => {
     isLoading: nowPlayLoading,
     isLoading: nowPlayError,
   } = useQuery(['getNowPlatMovie', type, 'now_playing'], () => getContents(type, 'now_playing'));
-
 
   const isLoading = popularLoading || TopReatedLoading || upcomingLoading || nowPlayLoading;
   const isError = popularError || TopReatedError || upcomingError || nowPlayError;
@@ -52,16 +54,15 @@ export const Home = () => {
   return (
     <Container>
       <Banner type="movie" content={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
-      <Slider  lists={nowPlayMovieList?.results} title="개봉중인 영화" />
-      <Slider  lists={topRatedMovieList?.results} title="최고평점 영화" />
-      <Slider  lists={upcomingMovieList?.results} title="개봉예정 영화" />
+      <Slider lists={nowPlayMovieList?.results} title="개봉중인 영화" />
+      <Slider lists={topRatedMovieList?.results} title="최고평점 영화" />
+      <Slider lists={upcomingMovieList?.results} title="개봉예정 영화" />
     </Container>
   );
 };
 
 const Container = styled.div`
   width: 100vw;
-  height: 200vh;
+  height: 1350px;
   ${({ theme }) => theme.FlexCol};
-  gap: 50px 0;
 `;

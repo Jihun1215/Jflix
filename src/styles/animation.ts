@@ -55,3 +55,27 @@ export const upAndDown = keyframes`
     transform: translate(-17%,-20%);
   }
 `;
+
+export const downmodal = keyframes`
+  0% {
+   transform: scale(1);
+  }
+  50% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(0);
+  }
+`;
+
+export const upmodal = keyframes`
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;

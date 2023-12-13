@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {  useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -45,7 +45,9 @@ export const Search = () => {
         </Tab>
       </Tabnav>
 
-      <SearchContentArea>{type === 'movie' ? <SearchMovieContent query={query!} /> : <SearchTvContent query={query!} />}</SearchContentArea>
+      <SearchContentArea>
+        {type === 'movie' ? <SearchMovieContent query={query!} /> : <SearchTvContent query={query!} />}
+      </SearchContentArea>
     </Container>
   );
 };

@@ -27,14 +27,9 @@ export const windowWidthState = atom({
   default: window.innerWidth,
 });
 
-// export const SearchMovieTotalCount = atom<number>({
-//   key: 'searchmoviecount',
-//   default: 0,
-// });
-
-// export const SearchTvTotalCount = atom<number>({
-//   key: 'searchTvcount',
-//   default: 0,
+// export const serachValueState = atom<string | null>({
+//   key: 'serachValue',
+//   default: null,
 // });
 
 export const ModalTypeAndId = atom<IModal | undefined>({

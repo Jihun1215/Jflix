@@ -26,7 +26,6 @@ export const Item = ({
     setIsModalOpen(true);
     setModalTypeAndId(modalInfo);
   };
-
   return (
     <>
       {list?.map((page) =>

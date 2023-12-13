@@ -47,7 +47,11 @@ export const Banner = ({ type, content, ranking }: BannerProps) => {
             </TopText>
             <Title>{type === 'movie' ? `${content?.title}` : `${content?.name}`}</Title>
             <Overview>
-              {type === 'tv' ? <OverviewText>제공된 줄거리가 없습니다.</OverviewText> : <OverviewText>{truncatedText}</OverviewText>}{' '}
+              {content?.overview === '' ? (
+                <OverviewText>제공된 줄거리가 없습니다.</OverviewText>
+              ) : (
+                <OverviewText>{truncatedText}</OverviewText>
+              )}
             </Overview>
             <DetailArea>
               <button

@@ -17,6 +17,7 @@ import { IoClose } from 'react-icons/io5';
 import { GoPlusCircle, GoCheckCircle } from 'react-icons/go';
 
 import { Actor } from './modal/Actor';
+import { upmodal } from 'styles/animation';
 
 export const Modal = () => {
   const location = useLocation();
@@ -27,17 +28,20 @@ export const Modal = () => {
 
   const [modalTypeAndId, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
-  const { data: modalList, isLoading: DetailLoading } = useQuery(['modalData', modalTypeAndId?.type, 'id'], () => {
-    if (modalTypeAndId?.type && modalTypeAndId?.id) {
-      return getModalContentData(modalTypeAndId.type, modalTypeAndId.id);
+  const { data: modalList, isLoading: DetailLoading } = useQuery(
+    ['modalData', modalTypeAndId?.type, 'id'],
+    () => {
+      if (modalTypeAndId?.type && modalTypeAndId?.id) {
+        return getModalContentData(modalTypeAndId.type, modalTypeAndId.id);
+      }
+      // modalTypeAndId값이 없을 시 에러 코드 반환
+      return Promise.reject(new Error('Invalid type or id'));
+    },
+    {
+      // 데이터 캐싱처리가 되어 새로운 콘텐츠 클릭 시 
+      staleTime: 0, // 항상 만료되도록 설정
     }
-    // modalTypeAndId값이 없을 시 에러 코드 반환
-    return Promise.reject(new Error('Invalid type or id'));
-  });
-
-  // const { data: modalList, isLoading: DetailLoading } = useQuery(['modalData', modalTypeAndId?.type, 'id'], () =>
-  //   getModalContentData(modalTypeAndId?.type, modalTypeAndId?.id)
-  // );
+  );
 
   const onClickCloseModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const element = e.target as HTMLElement;
@@ -49,6 +53,7 @@ export const Modal = () => {
       setModalTypeAndId(undefined);
     }
   };
+
   const onCloseModal = () => {
     setISModalOpen(false);
     setModalTypeAndId(undefined);
@@ -129,8 +134,10 @@ export const Modal = () => {
                     })}
                     <span />
                     {modalTypeAndId?.type === 'movie' ? <RuntimeAndSeasons>{modalList?.runtime}분</RuntimeAndSeasons> : null}
-                    {modalTypeAndId?.type === 'tv' ? <RuntimeAndSeasons>시즌 {modalList?.seasons.length}</RuntimeAndSeasons> : null}
-                    {modalTypeAndId?.type === 'tv' ? <RuntimeAndSeasons>에피소드 {modalList?.number_of_episodes}</RuntimeAndSeasons> : null}
+                    {modalTypeAndId?.type === 'tv' ? <RuntimeAndSeasons>시즌 {modalList?.seasons.length}개</RuntimeAndSeasons> : null}
+                    {modalTypeAndId?.type === 'tv' ? (
+                      <RuntimeAndSeasons>에피소드 {modalList?.number_of_episodes}개</RuntimeAndSeasons>
+                    ) : null}
                   </DataInfoArea>
 
                   <Title>
@@ -195,6 +202,9 @@ const ModalCard = styled(motion.div)`
   background-color: ${({ theme }) => theme.colors.black};
   color: ${({ theme }) => theme.colors.white};
   border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 3px 10px;
+  /* transition: 03; */
+  animation: ${upmodal} 0.25s ease-in-out;
 `;
 
 const CardWrapper = styled.div`

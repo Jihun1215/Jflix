@@ -41,7 +41,7 @@ const infoVariants = {
   hover: {
     display: 'block',
     transition: {
-      delay: 0.5,
+      delay: 0.4,
       duaration: 0.3,
       type: 'tween',
     },
@@ -91,6 +91,7 @@ export const Slider = ({ lists, title }: SliderProps) => {
   const maxIndex = Math.floor(listLength / offset) - 1;
 
   // Slider Moving
+  // const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(true);
   const [isPrevBtnDisabled, setIsPrevBtnDisabled] = useState(true);
   const [moving, setMoving] = useState(false);
   const [movingBack, setMovingBack] = useState(false);
@@ -160,7 +161,8 @@ export const Slider = ({ lists, title }: SliderProps) => {
                     <CardTitle>{data.title || data.name}</CardTitle>
                     <CardDateAndRating>
                       <CardDate>
-                        개봉일: <span>{data.release_date}</span>
+                        개봉일:
+                        {type === 'movie' ? <span>{data.release_date}</span> : <span>{data.first_air_date}</span>}
                       </CardDate>
                       <CardRating>
                         평점: <span> {data.vote_average}</span>
@@ -279,7 +281,6 @@ const CardPoster = styled(motion.div)<{
 }>`
   width: 100%;
   padding-top: 56%;
-  /* border: 1px solid red; */
   border-radius: 6px;
   background-image: url(${({ bg }) => bg});
   background-size: contain;
@@ -292,6 +293,7 @@ const CardTitle = styled.div`
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 5px;
+
   @media (max-width: 1023px) {
     font-size: 16px;
   }
