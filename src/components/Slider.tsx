@@ -24,6 +24,7 @@ interface SliderProps {
   lists: IContent[];
   title: string;
 }
+
 //  Card 컴포넌트 애니메이션
 const cardVariants = {
   hover: {
@@ -61,6 +62,7 @@ const sliderVariants = {
 };
 
 export const Slider = ({ lists, title }: SliderProps) => {
+  // const [hoveredCard, setHoveredCard] = useState(null);
   const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
   const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
 
@@ -162,7 +164,7 @@ export const Slider = ({ lists, title }: SliderProps) => {
                     <CardDateAndRating>
                       <CardDate>
                         개봉일:
-                        {type === 'movie' ? <span>{data.release_date}</span> : <span>{data.first_air_date}</span>}
+                        <span>{data.release_date || data.first_air_date}</span>
                       </CardDate>
                       <CardRating>
                         평점: <span> {data.vote_average}</span>
@@ -270,7 +272,7 @@ const CardInfo = styled(motion.div)`
   padding: 5%;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-  background-color: ${({ theme }) => theme.colors.gray};
+  background-color: #495057;
   color: ${({ theme }) => theme.colors.white};
 `;
 

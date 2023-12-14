@@ -43,9 +43,13 @@ export const Banner = ({ type, content, ranking }: BannerProps) => {
           <Card>
             <TopText>
               <NetflixLogo />
-              {type === 'movie' ? <p>오늘의 {ranking + 1}위 영화</p> : <p>오늘의 {ranking + 1}위 Tv</p>}
+              <p>
+                오늘의 {ranking + 1}위 {type === 'movie' ? '영화' : 'Tv'}
+              </p>
             </TopText>
-            <Title>{type === 'movie' ? `${content?.title}` : `${content?.name}`}</Title>
+            <Title>
+              {content?.title || content.name}
+            </Title>
             <Overview>
               {content?.overview === '' ? (
                 <OverviewText>제공된 줄거리가 없습니다.</OverviewText>

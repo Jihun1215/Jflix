@@ -38,7 +38,7 @@ export const Modal = () => {
       return Promise.reject(new Error('Invalid type or id'));
     },
     {
-      // 데이터 캐싱처리가 되어 새로운 콘텐츠 클릭 시 
+      // 데이터 캐싱처리가 되어 새로운 콘텐츠 클릭 시
       staleTime: 0, // 항상 만료되도록 설정
     }
   );
@@ -141,7 +141,7 @@ export const Modal = () => {
                   </DataInfoArea>
 
                   <Title>
-                    <h2>{modalTypeAndId?.type === 'movie' ? `${modalList?.title}` : `${modalList?.name}`}</h2>
+                    <h2>{modalList?.title || modalList?.name}</h2>
                     {isSaveList ? (
                       <GoCheckCircle
                         onClick={() => {

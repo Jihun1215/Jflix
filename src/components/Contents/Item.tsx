@@ -39,10 +39,9 @@ export const Item = ({
             >
               <Poster src={data.poster_path ? getImgPath(data?.poster_path) : noimg} />
               <Info>
-                <Title>{type === 'movie' ? `${data.title}` : `${data.name}`} </Title>
+                <Title>{data.title || data.name} </Title>
                 <Date>
-                  개봉일:
-                  {type === 'movie' ? <span>{data.release_date}</span> : <span>{data.first_air_date}</span>}
+                  개봉일: <span>{data.release_date || data.name}</span>
                 </Date>
 
                 <Vote>
