@@ -95,10 +95,8 @@ export const Slider = ({ lists, title, zindex }: SliderProps) => {
     setIndex((prev) => (prev > maxIndex ? maxIndex : prev));
   }, [windowWidth]);
 
-
-  const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(false);
+  const [isNextBtnDisabled] = useState(false);
   const [isPrevBtnDisabled, setIsPrevBtnDisabled] = useState(true);
-
 
   const [moving, setMoving] = useState(false);
   const [movingBack, setMovingBack] = useState(false);
@@ -112,8 +110,6 @@ export const Slider = ({ lists, title, zindex }: SliderProps) => {
       setMovingBack(true);
     }
   };
-
-
 
   // 다음 콘텐츠 보기 함수
   const onClickNextBtn = () => {
@@ -229,7 +225,6 @@ const SliderContainer = styled.div`
   margin: 0 auto;
   ${({ theme }) => theme.FlexRow};
   ${({ theme }) => theme.FlexCenter};
-  border: 1px solid red;
   @media (max-width: 55px) {
     padding: 0;
   }
