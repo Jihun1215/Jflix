@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import { useLocation } from 'react-router-dom';
@@ -14,8 +14,9 @@ import { GrPrevious, GrNext } from 'react-icons/gr';
 import { getImgPath } from 'utils/api';
 
 import { IContent } from 'type/type';
+import noimg from 'assets/noimg.png';
 
-interface ISliderVariantsProps {
+interface ISliderProps {
   movingBack: boolean;
   windowWidth: number;
 }
@@ -23,12 +24,26 @@ interface ISliderVariantsProps {
 interface SliderProps {
   lists: IContent[];
   title: string;
+  zindex: number;
 }
 
-//  Card 컴포넌트 애니메이션
+// Slider 애니메이션
+const sliderVariants = {
+  enter: ({ movingBack, windowWidth }: ISliderProps) => ({
+    x: movingBack ? -windowWidth + 10 : windowWidth - 10,
+  }),
+  show: {
+    x: 0,
+  },
+  exit: ({ movingBack, windowWidth }: ISliderProps) => ({
+    x: movingBack ? windowWidth - 10 : -windowWidth + 10,
+  }),
+};
+
+// Card Hover 애니메이션
 const cardVariants = {
   hover: {
-    scale: 1.2,
+    scale: 1.1,
     transition: {
       delay: 0.5,
       duaration: 0.3,
@@ -37,7 +52,7 @@ const cardVariants = {
   },
 };
 
-// 슬라이더 영화 이미지 Hover시 보여지는 함수 코드
+// 콘텐츠 Hover시 Info 보여주는 애니메이션
 const infoVariants = {
   hover: {
     display: 'block',
@@ -49,55 +64,46 @@ const infoVariants = {
   },
 };
 
-const sliderVariants = {
-  enter: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
-    x: movingBack ? -windowWidth + 10 : windowWidth - 10,
-  }),
-  show: {
-    x: 0,
-  },
-  exit: ({ movingBack, windowWidth }: ISliderVariantsProps) => ({
-    x: movingBack ? windowWidth - 10 : -windowWidth + 10,
-  }),
-};
-
-export const Slider = ({ lists, title }: SliderProps) => {
-  // const [hoveredCard, setHoveredCard] = useState(null);
-  const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
-  const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
-
-  const location = useLocation();
-  const type = location.pathname === '/' ? 'movie' : 'tv';
-
-  // Slider layout
+export const Slider = ({ lists, title, zindex }: SliderProps) => {
   const windowWidth = useDebouncedWidth();
 
+  // width에 따라 화면에 보여줄 콘텐츠 수를 조절하는 함수
   const getSliderOffSet = (windowWidth: number) => {
-    if (windowWidth <= 430) return 2;
-    else if (windowWidth <= 768) return 3;
-    else if (windowWidth <= 992) return 4;
-    else if (windowWidth <= 1600) return 6;
-    else return 6;
+    if (windowWidth <= 555) return 2;
+    // else if (windowWidth <= 720) return 3;
+    else if (windowWidth <= 1050) return 3;
+    else if (windowWidth <= 1565) return 4;
+    else return 5;
   };
 
-  // view에 보이는 슬라이더 영화이미지 갯수
+  // viewContentDataLength
   const offset = getSliderOffSet(windowWidth);
-
   // 슬라이더 버튼을 누룬 숫자
   const [index, setIndex] = useState(0);
-
   // props 받은 배열의 길이
   const listLength = lists?.length;
-
   // 최대 Slider 할 수있는 Index
   const maxIndex = Math.floor(listLength / offset) - 1;
 
+  // console.log('데이터Length', listLength);
+  // console.log('ViewDataLength', offset);
+  console.log('최대 슬라이더 갯수', maxIndex);
+  // console.log('Index', index);
   // Slider Moving
-  // const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(true);
+
+  useEffect(() => {
+    setIndex((prev) => (prev > maxIndex ? maxIndex : prev));
+  }, [windowWidth]);
+
+
+  const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(false);
   const [isPrevBtnDisabled, setIsPrevBtnDisabled] = useState(true);
+
+
   const [moving, setMoving] = useState(false);
   const [movingBack, setMovingBack] = useState(false);
 
+  // 이전 콘텐츠 보기 함수
   const onClickPrenBtn = () => {
     if (lists) {
       if (moving) return;
@@ -107,6 +113,9 @@ export const Slider = ({ lists, title }: SliderProps) => {
     }
   };
 
+
+
+  // 다음 콘텐츠 보기 함수
   const onClickNextBtn = () => {
     if (lists) {
       if (moving) return;
@@ -120,6 +129,12 @@ export const Slider = ({ lists, title }: SliderProps) => {
     setMoving(false);
     setMovingBack(false);
   };
+
+  const [, setIsModalOpen] = useRecoilState(modalIsOpenState);
+  const [, setModalTypeAndId] = useRecoilState(ModalTypeAndId);
+
+  const location = useLocation();
+  const type = location.pathname === '/' ? 'movie' : 'tv';
 
   const onClickModalOpen = (id: number) => {
     const modalInfo = { type, id };
@@ -136,7 +151,6 @@ export const Slider = ({ lists, title }: SliderProps) => {
         <PrevBtn onClick={onClickPrenBtn} disabled={isPrevBtnDisabled}>
           <GrPrevious />
         </PrevBtn>
-
         <AnimatePresence initial={false} onExitComplete={toggleMoving} custom={{ movingBack, windowWidth }}>
           <SliderWrapper
             key={index}
@@ -147,18 +161,18 @@ export const Slider = ({ lists, title }: SliderProps) => {
             transition={{ type: 'tween', duration: 0.5 }}
             custom={{ movingBack, windowWidth }}
             offset={offset}
+            zindex={zindex}
           >
             {lists?.slice(offset * index, offset * index + offset).map((data, idx) => (
-              <Card key={data.id}>
-                <CardPoster
-                  bg={getImgPath(data.backdrop_path)}
+              <Card key={data.id} offset={offset}>
+                <Poster
+                  bg={data.backdrop_path ? getImgPath(data.backdrop_path) : noimg}
                   idx={idx}
                   offset={offset}
                   onClick={() => onClickModalOpen(data?.id)}
                   variants={cardVariants}
                   whileHover="hover"
                 >
-                  {/* 여기가 Hover시 보이는 영역  */}
                   <CardInfo variants={infoVariants}>
                     <CardTitle>{data.title || data.name}</CardTitle>
                     <CardDateAndRating>
@@ -171,14 +185,14 @@ export const Slider = ({ lists, title }: SliderProps) => {
                       </CardRating>
                     </CardDateAndRating>
                   </CardInfo>
-                </CardPoster>
+                </Poster>
               </Card>
             ))}
           </SliderWrapper>
-          <NextBtn onClick={onClickNextBtn}>
-            <GrNext />
-          </NextBtn>
         </AnimatePresence>
+        <NextBtn onClick={onClickNextBtn} disabled={isNextBtnDisabled}>
+          <GrNext />
+        </NextBtn>
       </SliderContainer>
     </Container>
   );
@@ -186,10 +200,11 @@ export const Slider = ({ lists, title }: SliderProps) => {
 
 const Container = styled.section`
   width: 100%;
-  height: 200px;
+  height: 225px;
   ${({ theme }) => theme.FlexCol};
   ${({ theme }) => theme.FlexCenter};
   gap: 20px 0;
+  margin-bottom: 50px;
 `;
 
 const TitleAndPoint = styled.div`
@@ -210,10 +225,14 @@ const Title = styled.h2`
 const SliderContainer = styled.div`
   position: relative;
   width: 95%;
-  height: 120px;
+  height: 100%;
   margin: 0 auto;
   ${({ theme }) => theme.FlexRow};
-  align-items: center;
+  ${({ theme }) => theme.FlexCenter};
+  border: 1px solid red;
+  @media (max-width: 55px) {
+    padding: 0;
+  }
 `;
 
 const Button = styled.button`
@@ -229,7 +248,7 @@ const Button = styled.button`
   color: ${({ theme }) => theme.colors.white};
 
   ${(props) =>
-    !props.disabled &&
+    props.disabled &&
     css`
       opacity: 0.5;
       &:hover {
@@ -243,28 +262,79 @@ const Button = styled.button`
 
 const PrevBtn = styled(Button)`
   left: -10px;
+  transition: 0.15s;
+  @media (max-width: 800px) {
+    bottom: 70px;
+  }
 `;
 const NextBtn = styled(Button)`
   right: -10px;
+  transition: 0.15s;
+  @media (max-width: 800px) {
+    bottom: 70px;
+  }
 `;
 
-const SliderWrapper = styled(motion.div)<{ offset: number }>`
+const SliderWrapper = styled(motion.div)<{ offset: number; zindex: number }>`
   position: absolute;
+  z-index: ${({ zindex }) => zindex};
   display: grid;
   grid-template-columns: ${(props) => `repeat(${props.offset}, 1fr)`};
+  width: 95%;
+  height: 100%;
   gap: 10px;
-  width: 100%;
-  padding: 0 60px;
-  @media (max-width: 1023px) {
-    padding: 0 40px;
+  @media (max-width: 885px) {
+    width: 90%;
   }
-
-  @media (max-width: 479px) {
-    padding: 0 20px;
+  @media (max-width: 720px) {
+    padding: 0 20px 0 40px;
+  }
+  @media (max-width: 450px) {
+    padding: 0;
   }
 `;
 
-const Card = styled.div``;
+const Card = styled.div<{ offset: number }>`
+  width: 300px;
+  height: 100%;
+  transition: 0.15s;
+  @media (max-width: 1700px) {
+    width: 275px;
+  }
+  @media (max-width: 1260px) {
+    width: 250px;
+  }
+  @media (max-width: 1150px) {
+    width: 225px;
+  }
+  @media (max-width: 800px) {
+    width: 200px;
+  }
+
+  @media (max-width: 720px) {
+    width: 175px;
+  }
+
+  @media (max-width: 640px) {
+    width: 150px;
+  }
+`;
+
+const Poster = styled(motion.div)<{
+  bg?: string;
+  idx: number;
+  offset: number;
+}>`
+  width: 100%;
+  height: 100%;
+  padding-top: 56%;
+  border-radius: 6px;
+  background-image: url(${({ bg }) => bg});
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transform-origin: center ${({ idx, offset }) => (idx === 0 ? 'left' : idx === offset - 1 ? 'right' : 'center')};
+`;
 
 const CardInfo = styled(motion.div)`
   display: none;
@@ -274,21 +344,6 @@ const CardInfo = styled(motion.div)`
   border-bottom-right-radius: 4px;
   background-color: #495057;
   color: ${({ theme }) => theme.colors.white};
-`;
-
-const CardPoster = styled(motion.div)<{
-  bg?: string;
-  idx: number;
-  offset: number;
-}>`
-  width: 100%;
-  padding-top: 56%;
-  border-radius: 6px;
-  background-image: url(${({ bg }) => bg});
-  background-size: contain;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  transform-origin: center ${({ idx, offset }) => (idx === 0 ? 'left' : idx === offset - 1 ? 'right' : 'center')};
 `;
 
 const CardTitle = styled.div`

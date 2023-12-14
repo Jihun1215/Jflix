@@ -54,9 +54,9 @@ export const Home = () => {
   return (
     <Container>
       <Banner type="movie" content={popularMovieList?.results?.[randomNumber]} ranking={randomNumber} />
-      <Slider lists={nowPlayMovieList?.results} title="개봉중인 영화" />
-      <Slider lists={topRatedMovieList?.results} title="최고평점 영화" />
-      <Slider lists={upcomingMovieList?.results} title="개봉예정 영화" />
+      <Slider lists={nowPlayMovieList?.results} title="개봉중인 영화" zindex={3} />
+      <Slider lists={topRatedMovieList?.results} title="최고평점 영화" zindex={2} />
+      <Slider lists={upcomingMovieList?.results} title="개봉예정 영화" zindex={1} />
     </Container>
   );
 };

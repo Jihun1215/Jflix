@@ -46,7 +46,6 @@ export const MyList = () => {
     }))
   );
 
-  // 데이터만 뽑기
   const myMovieData = myMovieQueries?.map((myMovie) => myMovie.data);
   const myTvData = myTvQueries?.map((myTv) => myTv.data);
 
