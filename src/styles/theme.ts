@@ -13,6 +13,7 @@ const colors: DefaultTheme['colors'] = {
   greey: '#40c057',
   lightdark: '#13161B',
   lightgreey: '#3FCF8E',
+  darkgary: '#495057',
 };
 
 // Intro 강조

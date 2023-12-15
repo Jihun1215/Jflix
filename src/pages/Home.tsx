@@ -63,6 +63,6 @@ export const Home = () => {
 
 const Container = styled.div`
   width: 100vw;
-  height: 1350px;
+  height: 1450px;
   ${({ theme }) => theme.FlexCol};
 `;

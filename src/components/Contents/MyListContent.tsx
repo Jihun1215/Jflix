@@ -95,7 +95,6 @@ const Content = styled.div`
 const Poster = styled.img`
   width: 100%;
   height: 250px;
-  border-radius: 4px;
   background-image: cover;
   @media (max-width: 700px) {
     height: 185px;

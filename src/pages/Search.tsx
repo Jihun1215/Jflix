@@ -132,4 +132,5 @@ const Tab = styled.p<{ isactive: boolean }>`
 const SearchContentArea = styled.div`
   width: 100%;
   padding-top: 50px;
+
 `;

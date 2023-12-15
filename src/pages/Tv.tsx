@@ -39,15 +39,15 @@ export const Tv = () => {
   return (
     <Container>
       <Banner type="tv" content={popularLists?.results?.[randomNumber]} ranking={randomNumber} />
-      <Slider lists={popularLists?.results} title="현재 인기있는 TV" />
-      <Slider lists={airingTodayLists?.results} title="오늘방영 TV" />
-      <Slider lists={topRatedTvData?.results} title="최고평점 TV" />
+      <Slider lists={popularLists?.results} title="현재 인기있는 TV" zindex={3} />
+      <Slider lists={airingTodayLists?.results} title="오늘방영 TV" zindex={2} />
+      <Slider lists={topRatedTvData?.results} title="최고평점 TV" zindex={1} />
     </Container>
   );
 };
 
 const Container = styled.div`
   width: 100vw;
-  height: 200vh;
-  overflow-x: hidden;
+  height: 1450px;
+  ${({ theme }) => theme.FlexCol};
 `;

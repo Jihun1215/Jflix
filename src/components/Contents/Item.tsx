@@ -41,7 +41,7 @@ export const Item = ({
               <Info>
                 <Title>{data.title || data.name} </Title>
                 <Date>
-                  개봉일: <span>{data.release_date || data.name}</span>
+                  개봉일: <span>{data.release_date || data.first_air_date}</span>
                 </Date>
 
                 <Vote>
@@ -67,6 +67,9 @@ const Content = styled.div`
     width: 150px;
     height: 200px;
   }
+  @media (max-width: 570px) {
+    ${({ theme }) => theme.WH100};
+  }
 `;
 
 const Poster = styled.img`
@@ -77,6 +80,11 @@ const Poster = styled.img`
 
   @media (max-width: 700px) {
     height: 150px;
+  }
+
+  @media (max-width: 570px) {
+    width: 100%;
+    height: 80%;
   }
 `;
 
@@ -90,6 +98,10 @@ const Info = styled.div`
   @media (max-width: 700px) {
     height: 50px;
   }
+  @media (max-width: 570px) {
+    width: 100%;
+    height: 20%;
+  }
 `;
 
 const Title = styled.h2`
@@ -100,6 +112,10 @@ const Title = styled.h2`
   text-align: center;
   @media (max-width: 700px) {
     height: 20px;
+  }
+  @media (max-width: 570px) {
+    width: 100%;
+    height: 33%;
   }
 `;
 
@@ -114,6 +130,10 @@ const Date = styled.p`
   @media (max-width: 700px) {
     height: 10px;
   }
+  @media (max-width: 570px) {
+    width: 100%;
+    height: 30%;
+  }
 `;
 
 const Vote = styled.p`
@@ -126,5 +146,9 @@ const Vote = styled.p`
   }
   @media (max-width: 700px) {
     height: 10px;
+  }
+  @media (max-width: 570px) {
+    width: 100%;
+    height: 30%;
   }
 `;

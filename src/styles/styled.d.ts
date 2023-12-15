@@ -27,6 +27,7 @@ declare module 'styled-components' {
       greey: string;
       lightdark: string;
       lightgreey: string;
+      darkgary: string;
     };
   }
 }

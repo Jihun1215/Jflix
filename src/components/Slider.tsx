@@ -69,27 +69,18 @@ export const Slider = ({ lists, title, zindex }: SliderProps) => {
 
   // width에 따라 화면에 보여줄 콘텐츠 수를 조절하는 함수
   const getSliderOffSet = (windowWidth: number) => {
-    if (windowWidth <= 555) return 2;
+    // if (windowWidth <= 555) return 2;
+    if (windowWidth <= 810) return 2;
     // else if (windowWidth <= 720) return 3;
     else if (windowWidth <= 1050) return 3;
     else if (windowWidth <= 1565) return 4;
     else return 5;
   };
 
-  // viewContentDataLength
   const offset = getSliderOffSet(windowWidth);
-  // 슬라이더 버튼을 누룬 숫자
   const [index, setIndex] = useState(0);
-  // props 받은 배열의 길이
   const listLength = lists?.length;
-  // 최대 Slider 할 수있는 Index
   const maxIndex = Math.floor(listLength / offset) - 1;
-
-  // console.log('데이터Length', listLength);
-  // console.log('ViewDataLength', offset);
-  console.log('최대 슬라이더 갯수', maxIndex);
-  // console.log('Index', index);
-  // Slider Moving
 
   useEffect(() => {
     setIndex((prev) => (prev > maxIndex ? maxIndex : prev));
@@ -160,7 +151,7 @@ export const Slider = ({ lists, title, zindex }: SliderProps) => {
             zindex={zindex}
           >
             {lists?.slice(offset * index, offset * index + offset).map((data, idx) => (
-              <Card key={data.id} offset={offset}>
+              <Card key={data.id}>
                 <Poster
                   bg={data.backdrop_path ? getImgPath(data.backdrop_path) : noimg}
                   idx={idx}
@@ -218,11 +209,11 @@ const Title = styled.h2`
   color: ${({ theme }) => theme.colors.white};
 `;
 
+// Card And Button Area
 const SliderContainer = styled.div`
   position: relative;
   width: 95%;
-  height: 100%;
-  margin: 0 auto;
+  height: 195px;
   ${({ theme }) => theme.FlexRow};
   ${({ theme }) => theme.FlexCenter};
   @media (max-width: 55px) {
@@ -238,7 +229,7 @@ const Button = styled.button`
   border: 0;
   outline: 0;
   background-color: transparent;
-  font-size: 20px;
+  font-size: 24px;
   z-index: 5;
   color: ${({ theme }) => theme.colors.white};
 
@@ -253,21 +244,36 @@ const Button = styled.button`
         transition: 0.3s;
       }
     `}
+
+  @media (max-width: 1023px) {
+    width: 40px;
+    font-size: 20px;
+  }
+
+  @media (max-width: 555px) {
+    bottom: 90px;
+  }
+
+  @media (max-width: 440px) {
+    width: 20px;
+    font-size: 16px;
+    bottom: 100px;
+  }
 `;
 
 const PrevBtn = styled(Button)`
   left: -10px;
-  transition: 0.15s;
+  /* transition: 0.15s;
   @media (max-width: 800px) {
     bottom: 70px;
-  }
+  } */
 `;
 const NextBtn = styled(Button)`
   right: -10px;
-  transition: 0.15s;
+  /* transition: 0.15s;
   @media (max-width: 800px) {
     bottom: 70px;
-  }
+  } */
 `;
 
 const SliderWrapper = styled(motion.div)<{ offset: number; zindex: number }>`
@@ -278,7 +284,12 @@ const SliderWrapper = styled(motion.div)<{ offset: number; zindex: number }>`
   width: 95%;
   height: 100%;
   gap: 10px;
-  @media (max-width: 885px) {
+
+  @media (max-width: 810px) {
+    width: 90%;
+  }
+
+  /* @media (max-width: 885px) {
     width: 90%;
   }
   @media (max-width: 720px) {
@@ -286,14 +297,14 @@ const SliderWrapper = styled(motion.div)<{ offset: number; zindex: number }>`
   }
   @media (max-width: 450px) {
     padding: 0;
-  }
+  } */
 `;
 
-const Card = styled.div<{ offset: number }>`
-  width: 300px;
+const Card = styled.div`
+  width: 100%;
   height: 100%;
   transition: 0.15s;
-  @media (max-width: 1700px) {
+  /* @media (max-width: 1700px) {
     width: 275px;
   }
   @media (max-width: 1260px) {
@@ -301,8 +312,8 @@ const Card = styled.div<{ offset: number }>`
   }
   @media (max-width: 1150px) {
     width: 225px;
-  }
-  @media (max-width: 800px) {
+  } */
+  /* @media (max-width: 800px) {
     width: 200px;
   }
 
@@ -312,7 +323,7 @@ const Card = styled.div<{ offset: number }>`
 
   @media (max-width: 640px) {
     width: 150px;
-  }
+  } */
 `;
 
 const Poster = styled(motion.div)<{
@@ -337,7 +348,7 @@ const CardInfo = styled(motion.div)`
   padding: 5%;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-  background-color: #495057;
+  background-color: ${({ theme }) => theme.colors.darkgary};
   color: ${({ theme }) => theme.colors.white};
 `;
 
