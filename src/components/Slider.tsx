@@ -27,7 +27,6 @@ interface SliderProps {
   zindex: number;
 }
 
-// Slider 애니메이션
 const sliderVariants = {
   enter: ({ movingBack, windowWidth }: ISliderProps) => ({
     x: movingBack ? -windowWidth + 10 : windowWidth - 10,
@@ -40,7 +39,6 @@ const sliderVariants = {
   }),
 };
 
-// Card Hover 애니메이션
 const cardVariants = {
   hover: {
     scale: 1.1,
@@ -52,7 +50,6 @@ const cardVariants = {
   },
 };
 
-// 콘텐츠 Hover시 Info 보여주는 애니메이션
 const infoVariants = {
   hover: {
     display: 'block',
@@ -67,11 +64,8 @@ const infoVariants = {
 export const Slider = ({ lists, title, zindex }: SliderProps) => {
   const windowWidth = useDebouncedWidth();
 
-  // width에 따라 화면에 보여줄 콘텐츠 수를 조절하는 함수
   const getSliderOffSet = (windowWidth: number) => {
-    // if (windowWidth <= 555) return 2;
     if (windowWidth <= 810) return 2;
-    // else if (windowWidth <= 720) return 3;
     else if (windowWidth <= 1050) return 3;
     else if (windowWidth <= 1565) return 4;
     else return 5;
@@ -209,7 +203,7 @@ const Title = styled.h2`
   color: ${({ theme }) => theme.colors.white};
 `;
 
-// Card And Button Area
+
 const SliderContainer = styled.div`
   position: relative;
   width: 95%;
@@ -263,17 +257,9 @@ const Button = styled.button`
 
 const PrevBtn = styled(Button)`
   left: -10px;
-  /* transition: 0.15s;
-  @media (max-width: 800px) {
-    bottom: 70px;
-  } */
 `;
 const NextBtn = styled(Button)`
   right: -10px;
-  /* transition: 0.15s;
-  @media (max-width: 800px) {
-    bottom: 70px;
-  } */
 `;
 
 const SliderWrapper = styled(motion.div)<{ offset: number; zindex: number }>`
@@ -284,46 +270,15 @@ const SliderWrapper = styled(motion.div)<{ offset: number; zindex: number }>`
   width: 95%;
   height: 100%;
   gap: 10px;
-
   @media (max-width: 810px) {
     width: 90%;
   }
-
-  /* @media (max-width: 885px) {
-    width: 90%;
-  }
-  @media (max-width: 720px) {
-    padding: 0 20px 0 40px;
-  }
-  @media (max-width: 450px) {
-    padding: 0;
-  } */
 `;
 
 const Card = styled.div`
   width: 100%;
   height: 100%;
   transition: 0.15s;
-  /* @media (max-width: 1700px) {
-    width: 275px;
-  }
-  @media (max-width: 1260px) {
-    width: 250px;
-  }
-  @media (max-width: 1150px) {
-    width: 225px;
-  } */
-  /* @media (max-width: 800px) {
-    width: 200px;
-  }
-
-  @media (max-width: 720px) {
-    width: 175px;
-  }
-
-  @media (max-width: 640px) {
-    width: 150px;
-  } */
 `;
 
 const Poster = styled(motion.div)<{

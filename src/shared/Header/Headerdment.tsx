@@ -23,7 +23,6 @@ export const Headerdment = () => {
     const element = e.target as HTMLElement;
     const TagName = element.tagName;
     e.stopPropagation();
-    console.log(TagName);
     if (TagName === 'DIV') {
       setIsMenuOpen(false);
     }
@@ -110,6 +109,7 @@ const MenuList = styled.li`
   font-size: 18px;
   font-weight: 600;
   padding-left: 15px;
+  cursor: pointer;
 `;
 
 const Circle = styled(motion.span)`
