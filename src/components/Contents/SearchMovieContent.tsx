@@ -12,7 +12,7 @@ import { Item } from './Item';
 export const SearchMovieContent = ({ query }: { query: string }) => {
   const fetchMoreRef = useRef<HTMLDivElement>(null);
   const intersecting = useIntersection(fetchMoreRef);
-
+  console.log(intersecting);
   const { data, isSuccess, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
     ['searchMovie', { pageParam: 1, query }],
     ({ pageParam = 1 }) => getSerachMovieContent({ pageParam, query }),
