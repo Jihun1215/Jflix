@@ -1,6 +1,6 @@
 # The MovieDB API를 사용한 넷플릭스 클론 코딩
 
-# 프로젝트명 - Jflix
+# Jflix
 
 ## 프로젝트 기능
 
